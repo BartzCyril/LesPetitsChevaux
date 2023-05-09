@@ -17,7 +17,7 @@ export default function RootLayout({
 
     const footer = (
         <footer>
-            <div className="border-t border-slate-400 mt-12 py-6 text-center text-slate-400">
+            <div className="border-t border-slate-400 mt-12 py-6 text-center">
                 <h3>Cyril</h3>
             </div>
         </footer>
