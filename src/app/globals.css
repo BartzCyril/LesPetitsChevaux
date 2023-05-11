@@ -32,7 +32,7 @@ ul {
   height: 500px;
 }
 
-.grid {
+.gameBoard-grid {
   display: grid;
   grid-template-columns: repeat(11, 1fr);
   padding: 25px 25px;

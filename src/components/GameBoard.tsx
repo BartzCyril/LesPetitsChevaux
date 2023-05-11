@@ -17,7 +17,7 @@ export function GameBoard() {
     ]
     return (
         <div className="gameBoard">
-            <div className="grid">
+            <div className="gameBoard-grid">
                 {GameBoard.map((row, y) => row.map((color, x) => <Cell color={color} positionXY={`${x}-${y}`} key={`${x}-${y}`}/>))}
             </div>
         </div>
