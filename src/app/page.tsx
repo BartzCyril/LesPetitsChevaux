@@ -1,7 +1,13 @@
 import BlogPage from "@/app/blog";
+import {ColorSelector} from "@/components/ColorSelector";
+import {GameBoard} from "@/components/GameBoard";
+
 function Page() {
     return (
-        <BlogPage></BlogPage>
+        <>
+            <GameBoard></GameBoard>
+            <BlogPage></BlogPage>
+        </>
     )
 }
 

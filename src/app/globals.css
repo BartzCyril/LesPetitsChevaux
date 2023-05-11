@@ -23,3 +23,50 @@ ul {
 .prose p {
   margin-bottom: 10px;
 }
+
+.gameBoard {
+  max-width: 42rem;
+  margin: 0 auto;
+  border: solid 5px black;
+  background-color:  #f3e1ce;
+  height: 500px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  padding: 25px 25px;
+  height: 100%;
+  grid-row-gap: 10px;
+  grid-column-gap: 10px;
+}
+
+.blue {
+  background-color: #03aacc;
+}
+
+.black {
+  background-color: black;
+}
+
+.red {
+  background-color: #ce3035;
+}
+
+.green {
+  background-color: #7cb121;
+}
+
+.yellow {
+  background-color: #f4b02f;
+}
+
+.transparent {
+  background-color: #f3e1ce;
+}
+
+.pieceGame {
+  border-radius: 100%;
+  border: solid 1px black;
+  position: relative;
+}
