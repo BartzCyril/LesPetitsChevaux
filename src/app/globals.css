@@ -70,3 +70,54 @@ ul {
   border: solid 1px black;
   position: relative;
 }
+
+.piece {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 50%;
+  width: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 100%;
+  border: solid 2px white;
+}
+
+.dice {
+  width: 100px;
+  height: 100px;
+  border: 1px solid black;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  margin: 20px auto;
+}
+
+.dot {
+  width: 30%;
+  height: 30%;
+  border-radius: 50%;
+  background-color: black;
+  margin: 0 2px;
+  display: none;
+}
+
+#dot-1,
+#dot-3,
+#dot-5 {
+  display: block;
+}
+
+.roll-animation {
+  animation: roll 1s linear;
+}
+
+@keyframes roll {
+  0% {
+    transform: rotateX(0) rotateY(0);
+  }
+
+  100% {
+    transform: rotateX(360deg) rotateY(360deg);
+  }
+}
