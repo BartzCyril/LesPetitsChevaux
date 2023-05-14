@@ -11,9 +11,6 @@ import {
 import {Cell} from "@/components/Cell";
 import {Dice} from "@/components/Dice";
 import {useCallback, useEffect, useRef, useState} from "react";
-import {getCustomDocumentImageError} from "next/dist/build/webpack/config/blocks/images/messages";
-import {Simulate} from "react-dom/test-utils";
-import doubleClick = Simulate.doubleClick;
 import {Piece, PlayerColors} from "@/interface/GameBoard";
 
 let playerColors: PlayerColors = {
@@ -35,7 +32,7 @@ let playerColors: PlayerColors = {
     }
 }
 
-function switchTurn(turn) {
+function switchTurn(turn: string) {
     switch (turn) {
         case "yellow" :
             return "green"
@@ -172,7 +169,7 @@ export function GameBoard() {
                 piece.removeEventListener('click', handleClick);
             });
         };
-    }, [diceValue, turn]);
+    }, [diceValue, turn, handleSwitchTurn]);
 
     return (
         <>
