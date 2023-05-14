@@ -7,9 +7,9 @@ type DiceProps = {
 }
 
 export function Dice({onDiceRoll}: DiceProps) {
-    const buttonRef = useRef(null)
+    const buttonRef = useRef(null);
     const handleDiceClick = () => {
-        const dice = buttonRef.current as HTMLElement
+        const dice = buttonRef.current as HTMLElement | null
         if (dice) {
             const dots = dice.querySelectorAll<HTMLElement>('.dot')
             // Ajout de l'animation de lancer de dé
@@ -20,8 +20,7 @@ export function Dice({onDiceRoll}: DiceProps) {
             });
             setTimeout(() => {
                 // Génération d'un nombre aléatoire entre 1 et 6
-                //const randomNumber = Math.floor(Math.random() * 6) + 1;
-                const randomNumber = 6
+                const randomNumber = Math.floor(Math.random() * 6) + 1;
                 onDiceRoll(randomNumber)
                 // Affichage du nombre de points correspondant
                 for (let i = 0; i < randomNumber; i++) {
