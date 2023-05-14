@@ -8,10 +8,10 @@ import {
     Stable,
     StartingPoint
 } from "@/type/GameBoard";
-import {Cell} from "@/components/Cell";
-import {Dice} from "@/components/Dice";
-import {useCallback, useEffect, useRef, useState} from "react";
-import {Piece, PlayerColors} from "@/interface/GameBoard";
+import { Cell } from "@/components/Cell";
+import { Dice } from "@/components/Dice";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Piece, PlayerColors } from "@/interface/GameBoard";
 
 let playerColors: PlayerColors = {
     yellow: {
@@ -34,13 +34,13 @@ let playerColors: PlayerColors = {
 
 function switchTurn(turn: string) {
     switch (turn) {
-        case "yellow" :
+        case "yellow":
             return "green"
-        case "red" :
+        case "red":
             return "blue"
-        case "blue" :
+        case "blue":
             return "yellow"
-        case "green" :
+        default:
             return "red"
     }
 }
@@ -59,19 +59,20 @@ function initialPiece(pathPiece: Index[]): Piece[] {
 
 function isConflict(gameBoard: HTMLElement, indexPath: Index, turn: string): boolean {
     const cell = gameBoard.querySelector(`#cell-${indexPath}`)
-    if (cell.hasChildNodes()) {
+    if (cell && cell.hasChildNodes()) {
         const piece = cell.childNodes[0] as HTMLElement
         const pieceColor = piece.classList[0]
         if (pieceColor === turn) {
             console.log("Vous devez d'abord avancer votre pion")
             return true
         } else {
-            const indexPiece = piece.id
+            const indexPiece = parseInt(piece.id)
             const piecePlayerColor = playerColors[pieceColor].pieces[indexPiece]
             const elementPrison = gameBoard.querySelector(`#cell-${piecePlayerColor.indexPrison}`)
             piecePlayerColor.out = false
             piecePlayerColor.indexPath = -1
-            elementPrison.appendChild(piece)
+            if (elementPrison)
+                elementPrison.appendChild(piece)
             return false
         }
     }
@@ -91,16 +92,17 @@ function isPieceOut(turn: string): boolean {
 function updateGameBoard(gameBoard: HTMLElement, pieceIndex: string, nextIndex: Index, turn: string) {
     const piece = gameBoard.querySelector(`#piece-${turn}-${pieceIndex}`)
     const nextPosition = gameBoard.querySelector(`#cell-${nextIndex}`)
-    nextPosition.appendChild(piece);
+    if (piece && nextPosition)
+        nextPosition.appendChild(piece);
 }
 
 function moveForwardPiece(gameBoard: HTMLElement, diceResult: number, pieceIndex: string, turn: string, handleSwitchTurn: () => void) {
     const playerColor = playerColors[turn]
-    if (!playerColor.pieces[pieceIndex].out) {
+    if (!playerColor.pieces[parseInt(pieceIndex)].out) {
         if (diceResult === 6) {
             if (!isConflict(gameBoard, playerColor.pathPiece[0], turn)) {
-                playerColor.pieces[pieceIndex].out = true
-                playerColor.pieces[pieceIndex].indexPath = 0
+                playerColor.pieces[parseInt(pieceIndex)].out = true
+                playerColor.pieces[parseInt(pieceIndex)].indexPath = 0
                 updateGameBoard(gameBoard, pieceIndex, playerColor.pathPiece[0], turn)
             }
         } else {
@@ -108,9 +110,9 @@ function moveForwardPiece(gameBoard: HTMLElement, diceResult: number, pieceIndex
             return
         }
     } else {
-        const nextIndexPath = playerColor.pieces[pieceIndex].indexPath + diceResult;
+        const nextIndexPath = playerColor.pieces[parseInt(pieceIndex)].indexPath + diceResult;
         if (playerColor.pathPiece[nextIndexPath] && !isConflict(gameBoard, playerColor.pathPiece[nextIndexPath], turn)) {
-            playerColor.pieces[pieceIndex].indexPath = nextIndexPath;
+            playerColor.pieces[parseInt(pieceIndex)].indexPath = nextIndexPath;
             updateGameBoard(gameBoard, pieceIndex, playerColor.pathPiece[nextIndexPath], turn);
         }
     }
@@ -147,25 +149,28 @@ export function GameBoard() {
     }, [turn]);
 
     useEffect(() => {
-        console.log(turn)
-        const gameBoard = gameBoardRef.current as HTMLElement
-        const pieces = gameBoard.querySelectorAll(`.${turn} .piece`);
-        const handleClick = (event) => {
-            const piece = event.target;
-            const indexPlayerColor = piece.id.match(/piece-\w+-(\d+)/)[1];
-            if (piece.classList.contains(turn) && diceValue !== -1) {
-                moveForwardPiece(gameBoard, diceValue, indexPlayerColor, turn, handleSwitchTurn);
-                setDiceValue(-1);
+        console.log(turn);
+        const gameBoard = gameBoardRef.current as HTMLElement | null;
+        const pieces = gameBoard?.querySelectorAll(`.${turn} .piece`);
+    
+        const handleClick: EventListenerObject = {
+            handleEvent(event: MouseEvent) {
+                const piece = event.target as HTMLElement;
+                const indexPlayerColor = piece.id.match(/piece-\w+-(\d+)/)?.[1];
+                if (piece.classList.contains(turn) && diceValue !== -1 && indexPlayerColor) {
+                    moveForwardPiece(gameBoard as HTMLElement, diceValue, indexPlayerColor, turn, handleSwitchTurn);
+                    setDiceValue(-1);
+                }
             }
         };
-
-        pieces.forEach((piece) => {
+    
+        pieces?.forEach((piece) => {
             piece.addEventListener('click', handleClick);
         });
-        console.log(pieces)
-
+        console.log(pieces);
+    
         return () => {
-            pieces.forEach((piece) => {
+            pieces?.forEach((piece) => {
                 piece.removeEventListener('click', handleClick);
             });
         };
@@ -175,10 +180,10 @@ export function GameBoard() {
         <>
             <div className="gameBoard" ref={gameBoardRef}>
                 <div className="gameBoard-grid">
-                    {GameBoard.map((color, index) => <Cell color={color} id={`${index}`} key={`${index}`}/>)}
+                    {GameBoard.map((color, index) => <Cell color={color} id={`${index}`} key={`${index}`} />)}
                 </div>
             </div>
-            <Dice onDiceRoll={handleDiceRoll}/>
+            <Dice onDiceRoll={handleDiceRoll} />
         </>
     )
 }
