@@ -1,4 +1,4 @@
-import {CellState, PieceColor} from "@/type/GameBoard";
+import {CellState} from "@/type/GameBoard";
 
 type PieceProps = {
     color: CellState,
@@ -16,7 +16,7 @@ export function PieceGame({color, id}: PieceProps) {
     else
         index = 3
     return (
-        <div className={`${color} piece`} id={`${index}`}>
+        <div className={`${color} piece`} id={`piece-${color}-${index}`}>
         </div>
     )
 }

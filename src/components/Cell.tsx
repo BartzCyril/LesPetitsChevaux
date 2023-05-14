@@ -9,7 +9,7 @@ type CellProps = {
 export function Cell({color, id}: CellProps) {
     if (color === "transparent") {
         return (
-            <div className={`${color}`} id={`${id}`}>
+            <div className={`${color}`} id={`cell-${id}`}>
             </div>
         )
     }
@@ -19,13 +19,13 @@ export function Cell({color, id}: CellProps) {
         id === "99" || id === "100" || id === "110" || id === "111"
     ) {
         return (
-            <div className={`${color} pieceGame`} id={`${id}`}>
+            <div className={`${color} pieceGame`} id={`cell-${id}`}>
                 <PieceGame color={color} id={id} />
             </div>
         )
     }
     return (
-        <div className={`${color} pieceGame`} id={`${id}`}>
+        <div className={`${color} pieceGame`} id={`cell-${id}`}>
         </div>
     )
 }

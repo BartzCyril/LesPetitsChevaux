@@ -80,6 +80,7 @@ ul {
   transform: translate(-50%, -50%);
   border-radius: 100%;
   border: solid 2px white;
+  cursor: pointer;
 }
 
 .dice {
