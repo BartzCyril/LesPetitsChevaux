@@ -7,20 +7,8 @@ export interface Piece {
 }
 
 export interface PlayerColors {
-    yellow : {
+    [key: string] : {
         pathPiece: Index[],
         pieces: Piece[]
     },
-    red : {
-        pathPiece: Index[],
-        pieces: Piece[]
-    },
-    green : {
-        pathPiece: Index[],
-        pieces: Piece[]
-    },
-    blue : {
-        pathPiece: Index[],
-        pieces: Piece[]
-    }
 }
