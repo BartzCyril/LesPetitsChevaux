@@ -9,9 +9,9 @@ type DiceProps = {
 export function Dice({onDiceRoll}: DiceProps) {
     const buttonRef = useRef(null)
     const handleDiceClick = () => {
-        const dice = buttonRef.current
+        const dice = buttonRef.current as HTMLElement
         if (dice) {
-            const dots = dice.querySelectorAll('.dot')
+            const dots = dice.querySelectorAll<HTMLElement>('.dot')
             // Ajout de l'animation de lancer de dé
             dice.classList.add('roll-animation')
             // Réinitialisation des points
