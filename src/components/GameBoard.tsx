@@ -17,19 +17,29 @@ let playerColors: PlayerColors = {
     yellow: {
         pathPiece: [44, 45, 46, 47, 48, 37, 26, 15, 4, 5, 6, 17, 28, 39, 50, 51, 52, 53, 54, 65, 76, 75, 74, 73, 72, 83, 94, 105, 116, 115, 114, 103, 92, 81, 70, 69, 68, 67, 66, 55, 56, 57, 58, 59],
         pieces: initialPiece([0, 1, 11, 12]),
+        listDomPieces: []
     },
     red: {
         pathPiece: [76, 75, 74, 73, 72, 83, 94, 105, 116, 115, 114, 103, 92, 81, 70, 69, 68, 67, 66, 55, 44, 45, 46, 47, 48, 37, 26, 15, 4, 5, 6, 17, 28, 39, 50, 51, 52, 53, 54, 65, 64, 63, 62, 61],
-        pieces: initialPiece([108, 109, 119, 120])
+        pieces: initialPiece([108, 109, 119, 120]),
+        listDomPieces: []
     },
     green: {
         pathPiece: [6, 17, 28, 39, 50, 51, 52, 53, 54, 65, 76, 75, 74, 73, 72, 83, 94, 105, 116, 115, 114, 103, 92, 81, 70, 69, 68, 67, 66, 55, 44, 45, 46, 47, 48, 37, 26, 15, 4, 5, 16, 27, 38, 49],
-        pieces: initialPiece([9, 10, 20, 21])
+        pieces: initialPiece([9, 10, 20, 21]),
+        listDomPieces: []
     },
     blue: {
         pathPiece: [114, 103, 92, 81, 70, 69, 68, 67, 66, 55, 44, 45, 46, 47, 48, 37, 26, 15, 4, 5, 6, 17, 28, 39, 50, 51, 52, 53, 54, 65, 76, 75, 74, 73, 72, 83, 94, 105, 116, 115, 104, 93, 82, 71],
-        pieces: initialPiece([99, 100, 110, 111])
+        pieces: initialPiece([99, 100, 110, 111]),
+        listDomPieces: []
     }
+}
+
+function pushListDomPieces(color: string, piece: any) {
+    if (piece === null)
+        return
+    playerColors[color].listDomPieces.push(piece)
 }
 
 function switchTurn(turn: string) {
@@ -66,7 +76,7 @@ function isConflict(gameBoard: HTMLElement, indexPath: Index, turn: string): boo
             console.log("Vous devez d'abord avancer votre pion")
             return true
         } else {
-            const indexPiece = parseInt(piece.id)
+            const indexPiece = parseInt(piece.id.match(/piece-\w+-(\d+)/)?.[1] as string)
             const piecePlayerColor = playerColors[pieceColor].pieces[indexPiece]
             const elementPrison = gameBoard.querySelector(`#cell-${piecePlayerColor.indexPrison}`)
             piecePlayerColor.out = false
@@ -147,12 +157,11 @@ export function GameBoard() {
     const handleSwitchTurn = useCallback(() => {
         setTurn(switchTurn(turn));
     }, [turn]);
-
+    
     useEffect(() => {
         console.log(turn);
         const gameBoard = gameBoardRef.current as HTMLElement | null;
-        const pieces = gameBoard?.querySelectorAll(`.${turn} .piece`);
-    
+        
         const handleClick: EventListenerObject = {
             handleEvent(event: MouseEvent) {
                 const piece = event.target as HTMLElement;
@@ -163,16 +172,17 @@ export function GameBoard() {
                 }
             }
         };
-    
-        pieces?.forEach((piece) => {
-            piece.addEventListener('click', handleClick);
-        });
-        console.log(pieces);
-    
+        
+        playerColors[turn].listDomPieces.forEach((piece) => {
+            if (piece) 
+                piece.addEventListener('click', handleClick);
+        })
+        
         return () => {
-            pieces?.forEach((piece) => {
-                piece.removeEventListener('click', handleClick);
-            });
+            playerColors[turn].listDomPieces.forEach((piece) => {
+                if (piece)
+                    piece.removeEventListener('click', handleClick);
+            })
         };
     }, [diceValue, turn, handleSwitchTurn]);
 
@@ -180,7 +190,7 @@ export function GameBoard() {
         <>
             <div className="gameBoard" ref={gameBoardRef}>
                 <div className="gameBoard-grid">
-                    {GameBoard.map((color, index) => <Cell color={color} id={`${index}`} key={`${index}`} />)}
+                    {GameBoard.map((color, index) => <Cell color={color} id={`${index}`} key={`${index}`} pushListDomPieces={pushListDomPieces}/>)}
                 </div>
             </div>
             <Dice onDiceRoll={handleDiceRoll} />

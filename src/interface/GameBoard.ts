@@ -9,6 +9,7 @@ export interface Piece {
 export interface PlayerColors {
     [key: string] : {
         pathPiece: Index[],
-        pieces: Piece[]
+        pieces: Piece[],
+        listDomPieces: HTMLElement[]
     },
 }
