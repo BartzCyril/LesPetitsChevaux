@@ -20,8 +20,7 @@ export function Dice({onDiceRoll}: DiceProps) {
             });
             setTimeout(() => {
                 // Génération d'un nombre aléatoire entre 1 et 6
-                //const randomNumber = Math.floor(Math.random() * 6) + 1;
-                const randomNumber = 6
+                const randomNumber = Math.floor(Math.random() * 6) + 1;
                 onDiceRoll(randomNumber)
                 // Affichage du nombre de points correspondant
                 for (let i = 0; i < randomNumber; i++) {
