@@ -8,31 +8,36 @@ import {
     Stable,
     StartingPoint
 } from "@/type/GameBoard";
-import { Cell } from "@/components/Cell";
-import { Dice } from "@/components/Dice";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Piece, PlayerColors } from "@/interface/GameBoard";
+import {Cell} from "@/components/Cell";
+import {Dice} from "@/components/Dice";
+import {useCallback, useEffect, useRef, useState} from "react";
+import {Piece, PlayerColors} from "@/interface/GameBoard";
 
 let playerColors: PlayerColors = {
     yellow: {
         pathPiece: [44, 45, 46, 47, 48, 37, 26, 15, 4, 5, 6, 17, 28, 39, 50, 51, 52, 53, 54, 65, 76, 75, 74, 73, 72, 83, 94, 105, 116, 115, 114, 103, 92, 81, 70, 69, 68, 67, 66, 55, 56, 57, 58, 59],
         pieces: initialPiece([0, 1, 11, 12]),
-        listDomPieces: []
+        listDomPieces: [],
+        isPlay: true
     },
     red: {
         pathPiece: [76, 75, 74, 73, 72, 83, 94, 105, 116, 115, 114, 103, 92, 81, 70, 69, 68, 67, 66, 55, 44, 45, 46, 47, 48, 37, 26, 15, 4, 5, 6, 17, 28, 39, 50, 51, 52, 53, 54, 65, 64, 63, 62, 61],
         pieces: initialPiece([108, 109, 119, 120]),
-        listDomPieces: []
+        listDomPieces: [],
+        isPlay: true
     },
     green: {
         pathPiece: [6, 17, 28, 39, 50, 51, 52, 53, 54, 65, 76, 75, 74, 73, 72, 83, 94, 105, 116, 115, 114, 103, 92, 81, 70, 69, 68, 67, 66, 55, 44, 45, 46, 47, 48, 37, 26, 15, 4, 5, 16, 27, 38, 49],
         pieces: initialPiece([9, 10, 20, 21]),
-        listDomPieces: []
+        listDomPieces: [],
+        isPlay: true
     },
     blue: {
         pathPiece: [114, 103, 92, 81, 70, 69, 68, 67, 66, 55, 44, 45, 46, 47, 48, 37, 26, 15, 4, 5, 6, 17, 28, 39, 50, 51, 52, 53, 54, 65, 76, 75, 74, 73, 72, 83, 94, 105, 116, 115, 104, 93, 82, 71],
         pieces: initialPiece([99, 100, 110, 111]),
-        listDomPieces: []
+        listDomPieces: [],
+        isPlay: true
+
     }
 }
 
@@ -117,7 +122,6 @@ function moveForwardPiece(gameBoard: HTMLElement, diceResult: number, pieceIndex
             }
         } else {
             console.log("Vous ne pouvez pas sortir de pion sans 6")
-            return
         }
     } else {
         const nextIndexPath = playerColor.pieces[parseInt(pieceIndex)].indexPath + diceResult;
@@ -126,9 +130,7 @@ function moveForwardPiece(gameBoard: HTMLElement, diceResult: number, pieceIndex
             updateGameBoard(gameBoard, pieceIndex, playerColor.pathPiece[nextIndexPath], turn);
         }
     }
-    if (diceResult !== 6) {
-        handleSwitchTurn()
-    }
+    playerColors[turn].isPlay = diceResult !== 6;
 }
 
 export function GameBoard() {
@@ -146,43 +148,57 @@ export function GameBoard() {
         Prison.BLUE, Prison.BLUE, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, StartingPoint.BLUE, CellEmpty.BLACK, CellEmpty.BLACK, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, Prison.RED, Prison.RED
     ]
     const [diceValue, setDiceValue] = useState(-1);
-    const [turn, setTurn] = useState("red")
+    const [turn, setTurn] = useState("")
     const gameBoardRef = useRef(null)
 
     const handleDiceRoll = (value: number) => {
         setDiceValue(value)
-        if (!isPieceOut(turn) && diceValue !== 6)
-            handleSwitchTurn()
+        if (turn === "") {
+            setTurn("red")
+            playerColors["red"].isPlay = false
+        }
+        if (turn !== "") {
+            if (!isPieceOut(turn) && diceValue !== 6) {
+                playerColors[turn].isPlay = true
+            }
+            if (playerColors[turn].isPlay) {
+                handleSwitchTurn()
+            }
+        }
     }
+
     const handleSwitchTurn = useCallback(() => {
         setTurn(switchTurn(turn));
     }, [turn]);
-    
+
     useEffect(() => {
         console.log(turn);
         const gameBoard = gameBoardRef.current as HTMLElement | null;
-        
+
         const handleClick: EventListenerObject = {
             handleEvent(event: MouseEvent) {
                 const piece = event.target as HTMLElement;
                 const indexPlayerColor = piece.id.match(/piece-\w+-(\d+)/)?.[1];
                 if (piece.classList.contains(turn) && diceValue !== -1 && indexPlayerColor) {
                     moveForwardPiece(gameBoard as HTMLElement, diceValue, indexPlayerColor, turn, handleSwitchTurn);
-                    setDiceValue(-1);
                 }
             }
         };
-        
-        playerColors[turn].listDomPieces.forEach((piece) => {
-            if (piece) 
-                piece.addEventListener('click', handleClick);
-        })
-        
-        return () => {
+
+        if (turn !== "") {
             playerColors[turn].listDomPieces.forEach((piece) => {
                 if (piece)
-                    piece.removeEventListener('click', handleClick);
+                    piece.addEventListener('click', handleClick);
             })
+        }
+
+        return () => {
+            if (turn !== "") {
+                playerColors[turn].listDomPieces.forEach((piece) => {
+                    if (piece)
+                        piece.removeEventListener('click', handleClick);
+                })
+            }
         };
     }, [diceValue, turn, handleSwitchTurn]);
 
@@ -190,10 +206,11 @@ export function GameBoard() {
         <>
             <div className="gameBoard" ref={gameBoardRef}>
                 <div className="gameBoard-grid">
-                    {GameBoard.map((color, index) => <Cell color={color} id={`${index}`} key={`${index}`} pushListDomPieces={pushListDomPieces}/>)}
+                    {GameBoard.map((color, index) => <Cell color={color} id={`${index}`} key={`${index}`}
+                                                           pushListDomPieces={pushListDomPieces}/>)}
                 </div>
             </div>
-            <Dice onDiceRoll={handleDiceRoll} />
+            <Dice onDiceRoll={handleDiceRoll}/>
         </>
     )
 }
