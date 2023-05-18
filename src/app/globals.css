@@ -24,6 +24,18 @@ ul {
   margin-bottom: 10px;
 }
 
+.colorSelector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.colorSelector button {
+   height: 25px;
+   width: 25px;
+  border-radius: 100%;
+}
+
 .gameBoard {
   max-width: 42rem;
   margin: 0 auto;

@@ -1,11 +1,12 @@
 import BlogPage from "@/app/blog";
-import {GameBoard} from "@/components/GameBoard";
+import {Game} from "@/components/Game";
 
 function Page() {
+
     return (
         <>
-            <GameBoard></GameBoard>
-            <BlogPage></BlogPage>
+            <Game/>
+            <BlogPage/>
         </>
     )
 }
