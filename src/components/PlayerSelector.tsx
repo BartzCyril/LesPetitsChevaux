@@ -1,13 +1,16 @@
 'use client'
 
 import {PlayerColor} from "@/type/PlayerColor";
-import {SetStateAction, useEffect, useState} from "react";
+import {useEffect, useState, useCallback} from "react";
 import {Dice} from "@/components/Dice";
 import {StartTheGame} from "@/components/StartTheGame";
-import { PlayerScores } from "@/interface/PlayerScores";
+import {PlayerScores} from "@/interface/PlayerScores";
+import {ResultPlayerSelector} from "@/type/ResultPlayerSelector";
 
 type PlayerSelectorProps = {
-    handleStartGame: () => void
+    handleStartGame: () => void,
+    color: PlayerColor,
+    handleColorStart: (color: PlayerColor) => void
 }
 
 function switchTurn(turn: string) {
@@ -23,8 +26,8 @@ function switchTurn(turn: string) {
     }
 }
 
-export function PlayerSelector({handleStartGame}: PlayerSelectorProps) {
-    const colors = [PlayerColor.RED, PlayerColor.BLUE, PlayerColor.YELLOW, PlayerColor.GREEN]
+export function PlayerSelector({handleStartGame, color, handleColorStart}: PlayerSelectorProps) {
+    const colors: PlayerColor[] = [PlayerColor.RED, PlayerColor.BLUE, PlayerColor.YELLOW, PlayerColor.GREEN]
     const [diceValue, setDiceValue] = useState(-1);
     const [diceResults, setDiceResults] = useState<PlayerScores>({
         blue: 0,
@@ -32,9 +35,9 @@ export function PlayerSelector({handleStartGame}: PlayerSelectorProps) {
         yellow: 0,
         green: 0,
     });
-    const [turn, setTurn] = useState("")
+    const [turn, setTurn] = useState<PlayerColor | string>("")
     const [count, setCount] = useState(0)
-    const [message, setMessage] = useState("")
+    const [message, setMessage] = useState<ResultPlayerSelector | string>("")
 
     const onDiceRoll = (value: number) => {
         setDiceValue(value)
@@ -44,37 +47,39 @@ export function PlayerSelector({handleStartGame}: PlayerSelectorProps) {
         } else {
             setTurn(switchTurn(turn))
         }
-        if (message === "Égalité ! Il faut recommencer")
+        if (message === ResultPlayerSelector.DRAW)
             setMessage("")
     }
 
-    const checkWinner = (diceResults: PlayerScores) => {
+    const checkWinner = useCallback((diceResults: PlayerScores): ResultPlayerSelector | string => {
         const values: number[] = Object.values(diceResults);
         const allNonZero = values.every((value) => value !== 0);
         if (allNonZero) {
-            const maxResult = Math.max(...values);
-            const winningColors = Object.keys(diceResults).filter(
-                (color) => diceResults[color] === maxResult
-            );
-
-            if (winningColors.length === 1) {
-                return `Bravo ! C'est le joueur ${winningColors[0]} qui commence la partie !`
-            } else {
-                // Réinitialisation des résultats du dé
-                const resetResults: PlayerScores = {
-                    blue: 0,
-                    red: 0,
-                    yellow: 0,
-                    green: 0,
-                  };
-                setDiceResults(resetResults);
-                setCount(0)
-                setTurn("")
-                return "Égalité ! Il faut recommencer"
-            }
+          const maxResult = Math.max(...values);
+          const winningColors = Object.keys(diceResults).filter(
+            (color) => diceResults[color] === maxResult
+          );
+      
+          if (winningColors.length === 1) {
+            handleColorStart(winningColors[0] as PlayerColor);
+            return ResultPlayerSelector.WIN.replace("${color}", winningColors[0]) as ResultPlayerSelector;
+          } else {
+            // Réinitialisation des résultats du dé
+            const resetResults: PlayerScores = {
+              blue: 0,
+              red: 0,
+              yellow: 0,
+              green: 0,
+            };
+            setDiceResults(resetResults);
+            setCount(0);
+            setTurn("");
+            return ResultPlayerSelector.DRAW;
+          }
         }
-        return ""
-    }
+        return "";
+      }, [handleColorStart, setDiceResults, setCount, setTurn]);
+      
 
     useEffect(() => {
         if (turn !== "") {
@@ -89,7 +94,7 @@ export function PlayerSelector({handleStartGame}: PlayerSelectorProps) {
         if (count === 4) {
             setMessage(checkWinner(diceResults))
         }
-    }, [count, diceResults]);
+    }, [count, diceResults, checkWinner]);
 
     return (
         <section id="playerSelector">
@@ -115,7 +120,7 @@ export function PlayerSelector({handleStartGame}: PlayerSelectorProps) {
                 ))}
                 </tbody>
             </table>
-            {message.startsWith("Bravo") ? <StartTheGame handleStartGame={handleStartGame}/> :
+            {message!.startsWith("Bravo") ? <StartTheGame handleStartGame={handleStartGame}/> :
                 <Dice onDiceRoll={onDiceRoll}/>}
         </section>
     )
