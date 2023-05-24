@@ -8,7 +8,7 @@ export default function RootLayout({
     const header = (
         <header>
             <div className="text-center bg-slate-800 p-8 my-6 rounded-md">
-                <Link href="/">
+                <Link href="https://bartzcyril.github.io/LesPetitsChevaux/">
                     <h1 className="text-2xl text-white font-bold">Les petits chevaux</h1>
                 </Link>
             </div>

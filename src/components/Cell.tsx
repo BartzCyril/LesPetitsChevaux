@@ -33,13 +33,13 @@ export function Cell({color, id, pushListDomPieces}: CellProps) {
         id === '99' || id === '100' || id === '110' || id === '111'
     ) {
         renderedComponent = (
-            <div className={`${color} pieceGame`} id={`cell-${id}`}>
+            <div className={`${color} pieceGame`} id={`cell-${id}`} style={{opacity: 0.7}}>
                 <PieceGame color={color} id={id} ref={pieceGameRef}/>
             </div>
         );
     } else {
         renderedComponent = (
-            <div className={`${color} pieceGame`} id={`cell-${id}`}></div>
+            <div className={`${color} pieceGame`} id={`cell-${id}`} style={{opacity: 0.4}}></div>
         );
     }
 

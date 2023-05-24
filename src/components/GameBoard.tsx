@@ -6,9 +6,13 @@ import {Dice} from "@/components/Dice";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {Piece, PlayerColors} from "@/interface/GameBoard";
 import {PlayerColor} from "@/type/PlayerColor";
-import {isConflict} from "@/rules/conflict";
+import {isConflitBetweenDifferentColor} from "@/rules/conflict";
 import {ColorButton} from "@/components/ColorButton";
 import {ErrorMessage} from "@/type/ErrorMessage";
+import {checkIfPlayerClickedOnCorrectPiece} from "@/rules/checkIfPlayerClickedOnCorrectPiece";
+import {win} from "@/rules/win";
+import Loadable from "next/dist/shared/lib/loadable";
+import preloadAll = Loadable.preloadAll;
 
 let playerColors: PlayerColors = {
     yellow: {
@@ -44,7 +48,7 @@ function pushListDomPieces(color: string, piece: any) {
     playerColors[color].listDomPieces.push(piece)
 }
 
-function switchTurn(turn: string): PlayerColor {
+/**function switchTurn(turn: string): PlayerColor {
     switch (turn) {
         case "yellow":
             return PlayerColor.GREEN
@@ -52,6 +56,14 @@ function switchTurn(turn: string): PlayerColor {
             return PlayerColor.BLUE
         case "blue":
             return PlayerColor.YELLOW
+        default:
+            return PlayerColor.RED
+    }
+}**/
+function switchTurn(turn: string): PlayerColor {
+    switch (turn) {
+        case "red":
+            return PlayerColor.RED
         default:
             return PlayerColor.RED
     }
@@ -86,11 +98,13 @@ function updateGameBoard(gameBoard: HTMLElement, pieceIndex: string, nextIndex: 
         nextPosition.appendChild(piece);
 }
 
-function moveForwardPiece(gameBoard: HTMLElement, diceResult: number, pieceIndex: string, turn: PlayerColor, handleSwitchNextTurn: () => void, handleError: (message: ErrorMessage | null) => void) {
+function moveForwardPiece(gameBoard: HTMLElement, diceResult: number, pieceIndex: string, turn: PlayerColor, handleSwitchNextTurn: () => void, handleError: (message: ErrorMessage | null) => void, error: ErrorMessage | null) {
     const playerColor = playerColors[turn]
     if (!playerColor.pieces[parseInt(pieceIndex)].out) {
         if (diceResult === 6) {
-            if (!isConflict(playerColors, gameBoard, playerColor.pathPiece[0], turn, handleError)) {
+            if (checkIfPlayerClickedOnCorrectPiece(playerColors, pieceIndex, diceResult, false, gameBoard, turn, error, handleError))
+                return -1
+            else if (!isConflitBetweenDifferentColor(playerColors, gameBoard, playerColor.pathPiece[0], turn, handleError)) {
                 playerColor.pieces[parseInt(pieceIndex)].out = true
                 playerColor.pieces[parseInt(pieceIndex)].indexPath = 0
                 updateGameBoard(gameBoard, pieceIndex, playerColor.pathPiece[0], turn)
@@ -104,10 +118,14 @@ function moveForwardPiece(gameBoard: HTMLElement, diceResult: number, pieceIndex
         }
     } else {
         const nextIndexPath = playerColor.pieces[parseInt(pieceIndex)].indexPath + diceResult;
-        if (playerColor.pathPiece[nextIndexPath] && !isConflict(playerColors, gameBoard, playerColor.pathPiece[nextIndexPath], turn, handleError)) {
+        if (checkIfPlayerClickedOnCorrectPiece(playerColors, pieceIndex, diceResult,true, gameBoard, turn, error, handleError))
+            return -1
+        else if (playerColor.pathPiece[nextIndexPath] && !isConflitBetweenDifferentColor(playerColors, gameBoard, playerColor.pathPiece[nextIndexPath], turn, handleError)) {
             playerColor.pieces[parseInt(pieceIndex)].indexPath = nextIndexPath
             updateGameBoard(gameBoard, pieceIndex, playerColor.pathPiece[nextIndexPath], turn)
             handleError(null)
+            if (win(playerColors, gameBoard, turn))
+                console.log("win !!!!")
         } else {
             return -1
         }
@@ -144,7 +162,7 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
     const gameBoardRef = useRef(null)
     const [preGame, setPreGame] = useState(true)
     const [count, setCount] = useState(1)
-    
+
     const handleDiceRoll = (value: number) => {
         setDiceValue(value)
         if (turn === "") {
@@ -183,6 +201,7 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
     }
 
     useEffect(() => {
+
         if (turn !== "") {
             if (preGame && diceValue === 6)
                 setPreGame(false)
@@ -205,21 +224,11 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
                 const piece = event.target as HTMLElement;
                 const indexPlayerColor = piece.id.match(/piece-\w+-(\d+)/)?.[1];
                 if (piece.classList.contains(turn) && diceValue !== -1 && indexPlayerColor) {
-                    if (moveForwardPiece(gameBoard as HTMLElement, diceValue, indexPlayerColor, turn as PlayerColor, handleSwitchNextTurn, handleError) !== -1)
+                    if (moveForwardPiece(gameBoard as HTMLElement, diceValue, indexPlayerColor, turn as PlayerColor, handleSwitchNextTurn, handleError, error) !== -1)
                         setDiceValue(-1)
                 }
             }
         };
-
-        const gameMode: EventListenerObject = {
-            handleEvent(event: Event) {
-                const position = prompt("À quelle position voulez-vous envoyer le pion ?");
-                const piece = event.target as HTMLElement;
-                const indexPlayerColor = piece.id.match(/piece-\w+-(\d+)/)?.[1];
-                isConflict(playerColors, gameBoard as HTMLElement, parseInt(position as string), turn as PlayerColor, handleError)
-                updateGameBoard(gameBoard as HTMLElement, indexPlayerColor as string, parseInt(position as string), turn)
-            }
-        }
 
         if (nextTurn !== "") {
             playerColors[nextTurn].listDomPieces.forEach((piece) => {

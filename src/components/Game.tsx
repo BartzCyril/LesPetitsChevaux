@@ -5,6 +5,7 @@ import {GameBoard} from "@/components/GameBoard";
 import {ColorSelector} from "@/components/ColorSelector";
 import {PlayerSelector} from "@/components/PlayerSelector";
 import {PlayerColor} from "@/type/PlayerColor";
+import {Button} from "@/components/Button";
 
 export function Game() {
     const [startThePreGame, setStartThePreGame] = useState<boolean>(false)
@@ -21,10 +22,16 @@ export function Game() {
     const handleColorStart = (color: PlayerColor) => {
         setColorStart(color)
     }
+
+    const handleStartThePreGame = () => {
+        setStartThePreGame(true)
+    }
     
-    if (!startThePreGame) {
+   /**if (!startThePreGame) {
         return (
-            <button onClick={() => setStartThePreGame(true)}>Play</button>
+            <div className="flex justify-center">
+                <Button handleStart={handleStartThePreGame} buttonText={"Jouer"}/>
+            </div>
         )
     } else if (startThePreGame && !color) {
         return (
@@ -38,5 +45,9 @@ export function Game() {
         return (
             <GameBoard color={color as PlayerColor} colorStart={colorStart as PlayerColor}/>
         )
-    }
+    }**/
+    return (
+        <GameBoard color={color as PlayerColor} colorStart={"red" as PlayerColor}/>
+    )
+
 }
