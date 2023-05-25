@@ -91,7 +91,7 @@ export function moveForwardPiece(gameBoard: HTMLElement, diceResult: number, pie
                 return -1
             else if (!isConflitBetweenDifferentColor(playerColors, gameBoard, playerColor.pathPiece[0], turn, handleError)) {
                 if (turn === colorPlayer)
-                    addOpacityIfMoveForwardPiece(playerColors, gameBoard, playerColor.pieces[pieceIndex].indexPrison, playerColor.pathPiece[0], turn)
+                    addOpacityIfMoveForwardPiece(playerColors, gameBoard, playerColor.pieces[parseInt(pieceIndex)].indexPrison, playerColor.pathPiece[0], turn)
                 playerColor.pieces[parseInt(pieceIndex)].out = true
                 playerColor.pieces[parseInt(pieceIndex)].indexPath = 0
                 updateGameBoard(gameBoard, pieceIndex, playerColor.pathPiece[0], turn)
