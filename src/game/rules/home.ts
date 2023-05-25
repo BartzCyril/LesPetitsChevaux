@@ -46,12 +46,12 @@ export function home(gameBoard: HTMLElement, playerColors: PlayerColors, turn: P
             for (const child of piecesInHouse) {
                 const childIndex = parseInt(child.id.match(/piece-\w+-(\d+)/)?.[1] as string)
                 const childIndexPath = playerColors[turn].pieces[childIndex].indexPath
-                if ((playerColors[turn].pieces[pieceIndex].indexPath + diceResult) === childIndexPath) {
+                if ((playerColors[turn].pieces[parseInt(pieceIndex)].indexPath + diceResult) === childIndexPath) {
                     handleError(ErrorMessage.MOVE_PIECE_IN_HOUSE_OR_IMPOSSIBLE)
                     return false
                 }
             }
-            if (playerColors[turn].pathPiece[nextPieceIndex] === playerColors[turn].pathPiece[playerColors[turn].pieces[pieceIndex].indexPath + 1])
+            if (playerColors[turn].pathPiece[nextPieceIndex] === playerColors[turn].pathPiece[playerColors[turn].pieces[parseInt(pieceIndex)].indexPath + 1])
                 return true
             for (const child of piecesInHouse) {
                 const childIndex = parseInt(child.id.match(/piece-\w+-(\d+)/)?.[1] as string)
