@@ -27,7 +27,7 @@ export function Game() {
         setStartThePreGame(true)
     }
     
-   /**if (!startThePreGame) {
+   if (!startThePreGame) {
         return (
             <div className="flex justify-center">
                 <Button handleStart={handleStartThePreGame} buttonText={"Jouer"}/>
@@ -45,9 +45,5 @@ export function Game() {
         return (
             <GameBoard color={color as PlayerColor} colorStart={colorStart as PlayerColor}/>
         )
-    }**/
-    return (
-        <GameBoard color={color as PlayerColor} colorStart={"red" as PlayerColor}/>
-    )
-
+    }
 }

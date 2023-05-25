@@ -1,9 +1,9 @@
 import {PlayerColor} from "@/type/PlayerColor";
 import {Index} from "@/type/GameBoard";
 import {ErrorMessage} from "@/type/ErrorMessage";
-import {isConflictBetweenSameColor} from "@/rules/conflict";
+import {isConflictBetweenSameColor} from "@/game/rules/conflict";
 import {PlayerColors} from "@/interface/GameBoard";
-import {checkIfPlayerCanGoingToHome} from "@/rules/checkIfPlayerCanGoingToHome";
+import {home} from "@/game/rules/home";
 
 function numberPieceOut(playerColors: PlayerColors, turn: string): number {
     const pieces = playerColors[turn].pieces
@@ -58,11 +58,10 @@ function checkIfPlayerClickedOnPieceBlockingStartingCell(playerColors: PlayerCol
     return false
 }
 
-export function checkIfPlayerClickedOnCorrectPiece(playerColors: PlayerColors, pieceIndex: string, diceResult: number, isPieceOut: boolean, gameBoard: HTMLElement, turn: PlayerColor, errorMessage: ErrorMessage | null, handleError: (message: ErrorMessage | null) => void): boolean {
+export function checkIfPlayerClickedOnIncorrectPiece(playerColors: PlayerColors, pieceIndex: string, diceResult: number, isPieceOut: boolean, gameBoard: HTMLElement, turn: PlayerColor, errorMessage: ErrorMessage | null, handleError: (message: ErrorMessage | null) => void): boolean {
     const numberPieceOutColor = numberPieceOut(playerColors,turn)
     if (numberPieceOutColor >= 1 && numberPieceOutColor <= 4) {
-        if (!checkIfPlayerCanGoingToHome(gameBoard, playerColors, turn, pieceIndex, diceResult)) {
-            handleError(ErrorMessage.MOVE_PIECE_IN_HOUSE)
+        if (!home(gameBoard, playerColors, turn, pieceIndex, diceResult, handleError) && playerColors[turn].pathPiece[playerColors[turn].pieces[parseInt(pieceIndex)].indexPath + diceResult]) {
             return true
         }
     }

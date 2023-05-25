@@ -1,14 +1,23 @@
 'use client'
 
-/**import {useRef} from "react";
+import {useRef} from "react";
+import {ErrorMessage} from "@/type/ErrorMessage";
 
 type DiceProps = {
     onDiceRoll: (value: number) => void
+    canRoll?: boolean,
+    handleError?: (message: ErrorMessage | null) => void
 }
 
-export function Dice({onDiceRoll}: DiceProps) {
+export function Dice({onDiceRoll, canRoll = true, handleError}: DiceProps) {
     const buttonRef = useRef(null);
     const handleDiceClick = () => {
+        if (!canRoll) {
+            if (handleError) {
+                handleError(ErrorMessage.CANNOT_REROLL)
+            }
+            return
+        }
         const dice = buttonRef.current as HTMLElement | null
         if (dice) {
             const dots = dice.querySelectorAll<HTMLElement>('.dot')
@@ -20,13 +29,7 @@ export function Dice({onDiceRoll}: DiceProps) {
             });
             setTimeout(() => {
                 // Génération d'un nombre aléatoire entre 1 et 6
-                //const randomNumber = Math.floor(Math.random() * 6) + 1;
-                let randomNumber = Math.random();
-                if (randomNumber < 0.5) {
-                    randomNumber = 6;
-                } else {
-                    randomNumber = 2;
-                }
+                const randomNumber = Math.floor(Math.random() * 6) + 1;
                 onDiceRoll(randomNumber)
                 // Affichage du nombre de points correspondant
                 for (let i = 0; i < randomNumber; i++) {
@@ -47,19 +50,27 @@ export function Dice({onDiceRoll}: DiceProps) {
             <div className="dot" id="dot-6"></div>
         </button>
     )
-}**/
+}
 
-import { useRef, useState } from "react";
 
-type DiceProps = {
-    onDiceRoll: (value: number) => void;
+
+/**type DiceProps = {
+    onDiceRoll: (value: number) => void,
+    canRoll?: boolean,
+    handleError?: (message: ErrorMessage | null) => void
 };
 
-export function Dice({ onDiceRoll }: DiceProps) {
+export function Dice({ onDiceRoll, canRoll = true, handleError }: DiceProps) {
     const buttonRef = useRef(null);
     const [desiredResult, setDesiredResult] = useState("");
 
     const handleDiceClick = () => {
+        if (!canRoll) {
+            if (handleError) {
+                handleError(ErrorMessage.CANNOT_REROLL)
+            }
+            return
+        }
         let randomNumber: number;
         if (desiredResult === "") {
             // Generate a random number between 1 and 6
@@ -104,8 +115,42 @@ export function Dice({ onDiceRoll }: DiceProps) {
                 <div className="dot" id="dot-4"></div>
                 <div className="dot" id="dot-5"></div>
                 <div className="dot" id="dot-6"></div>
+                <div className="dot" id="dot-7"></div>
+                <div className="dot" id="dot-8"></div>
+                <div className="dot" id="dot-9"></div>
+                <div className="dot" id="dot-10"></div>
+                <div className="dot" id="dot-11"></div>
+                <div className="dot" id="dot-12"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
             </button>
             <input type="number" value={desiredResult} onChange={handleInputChange} />
         </div>
     );
 }
+**/
