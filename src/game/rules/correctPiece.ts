@@ -37,25 +37,23 @@ function checkIfClickedChildMatchesStartingCell(playerColors: PlayerColors, game
 
 function checkIfPlayerClickedOnPieceBlockingStartingCell(playerColors: PlayerColors, gameBoard: HTMLElement, indexPath: Index, pieceIndex: string, turn: PlayerColor, diceResult: number) {
     const cell = gameBoard.querySelector(`#cell-${indexPath}`)
+    const playerColor = playerColors[turn]
     if (cell && cell.hasChildNodes()) {
-        const piece = cell.childNodes[0] as HTMLElement
-        const pieceIndexColor = piece.id.match(/piece-\w+-(\d+)/)?.[1]
-        if (pieceIndexColor !== pieceIndex) {
-            const playerColor = playerColors[turn]
-            const nextCell = gameBoard.querySelector(`#cell-${playerColor.pathPiece[diceResult*2]}`)
-            if (nextCell && nextCell.hasChildNodes()) {
-                const child = nextCell.childNodes[0] as HTMLElement
-                const color = child.id.split("-")[1]
-                if (color === turn) {
-                    const nextPieceIndexColor = child.id.match(/piece-\w+-(\d+)/)?.[1]
-                    return nextPieceIndexColor === pieceIndex
-                }
-            }
-            return false
+        const child = cell.childNodes[0] as HTMLElement
+        const childIndex = child.id.split("-")[2]
+        const nextCell = gameBoard.querySelector(`#cell-${playerColor.pathPiece[diceResult*2]}`)
+        let isBlockNextCell = false
+        if (nextCell && nextCell.hasChildNodes()) {
+            const child = nextCell.childNodes[0] as HTMLElement
+            const color = child.id.split("-")[1]
+            if (color === turn)
+                isBlockNextCell = true
         }
-        return true
+        if (!isBlockNextCell) {
+            return pieceIndex === childIndex
+        }
     }
-    return false
+    return true
 }
 
 export function checkIfPlayerClickedOnIncorrectPiece(playerColors: PlayerColors, pieceIndex: string, diceResult: number, isPieceOut: boolean, gameBoard: HTMLElement, turn: PlayerColor, errorMessage: ErrorMessage | null, handleError: (message: ErrorMessage | null) => void): boolean {
@@ -72,7 +70,12 @@ export function checkIfPlayerClickedOnIncorrectPiece(playerColors: PlayerColors,
             return false
         if (startingCellContainChild(playerColors,gameBoard, turn) && isPieceOut && numberPieceOutColor > 1) {
             if (isConflictBetweenSameColor(turn, gameBoard, nextIndexPath, handleError)) {
-                return !checkIfPlayerClickedOnPieceBlockingStartingCell(playerColors,gameBoard, nextIndexPath, pieceIndex, turn, diceResult)
+                console.log(checkIfPlayerClickedOnPieceBlockingStartingCell(playerColors,gameBoard, nextIndexPath, pieceIndex, turn, diceResult))
+                if (!checkIfPlayerClickedOnPieceBlockingStartingCell(playerColors,gameBoard, nextIndexPath, pieceIndex, turn, diceResult)) {
+                    handleError(ErrorMessage.CLICK_PIECE_BLOCK_START_CELL)
+                    return true
+                }
+                return false
             }
             handleError(ErrorMessage.CLEAR_START_CELL_FIRST)
             return true
