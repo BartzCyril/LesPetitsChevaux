@@ -1,9 +1,9 @@
 'use client'
 
-import {useRef} from "react";
+import {useRef, useState} from "react";
 import {ErrorMessage} from "@/type/ErrorMessage";
 
-type DiceProps = {
+/**type DiceProps = {
     onDiceRoll: (value: number) => void
     canRoll?: boolean,
     handleError?: (message: ErrorMessage | null) => void
@@ -50,11 +50,11 @@ export function Dice({onDiceRoll, canRoll = true, handleError}: DiceProps) {
             <div className="dot" id="dot-6"></div>
         </button>
     )
-}
+}**/
 
 
 
-/**type DiceProps = {
+type DiceProps = {
     onDiceRoll: (value: number) => void,
     canRoll?: boolean,
     handleError?: (message: ErrorMessage | null) => void
@@ -148,9 +148,13 @@ export function Dice({ onDiceRoll, canRoll = true, handleError }: DiceProps) {
                 <div className="dot"></div>
                 <div className="dot"></div>
                 <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
             </button>
             <input type="number" value={desiredResult} onChange={handleInputChange} />
         </div>
     );
 }
-**/

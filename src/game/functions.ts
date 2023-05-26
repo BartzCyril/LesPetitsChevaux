@@ -41,7 +41,7 @@ export function pushListDomPieces(color: string, piece: HTMLElement) {
     playerColors[color].listDomPieces.push(piece)
 }
 
-export function switchTurn(turn: PlayerColor): PlayerColor {
+/**export function switchTurn(turn: PlayerColor): PlayerColor {
     switch (turn) {
         case "yellow":
             return PlayerColor.GREEN
@@ -49,6 +49,13 @@ export function switchTurn(turn: PlayerColor): PlayerColor {
             return PlayerColor.BLUE
         case "blue":
             return PlayerColor.YELLOW
+        default:
+            return PlayerColor.RED
+    }
+}**/
+
+export function switchTurn(turn: PlayerColor): PlayerColor {
+    switch (turn) {
         default:
             return PlayerColor.RED
     }
