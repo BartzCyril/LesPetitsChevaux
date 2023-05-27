@@ -134,7 +134,7 @@ export function PlayerSelector({handleStartGame, color, handleColorStart}: Playe
                 </tbody>
             </table>
             {renderToString(message as ReactElement).startsWith("<div") ? <Button handleStart={handleStartGame} buttonText={"Commencer la partie"}/> :
-                <Dice onDiceRoll={onDiceRoll}/>}
+                <Dice onDiceRoll={onDiceRoll} canRoll={true}/>}
         </section>
     )
 }

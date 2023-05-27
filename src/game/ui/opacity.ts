@@ -1,30 +1,28 @@
 import {PlayerColor} from "@/type/PlayerColor";
 import {Index} from "@/type/GameBoard";
 import {PlayerColors} from "@/interface/GameBoard";
-import Loadable from "next/dist/shared/lib/loadable";
-import preloadAll = Loadable.preloadAll;
 
 export function addOpacity(gameBoard: HTMLElement, turn: PlayerColor) {
-    const piecesGame = gameBoard.querySelectorAll('.pieceGame')
+    const piecesGame: HTMLElement[] = gameBoard.querySelectorAll('.pieceGame') as HTMLElement[]
     for (const pieceGame of piecesGame) {
         if (pieceGame.hasChildNodes()) {
             const child = pieceGame.childNodes[0] as HTMLElement
             const childColor = child.id.split("-")[1]
             if (childColor !== turn) {
-                pieceGame.classList.add("opacity-60")
+                pieceGame.style.opacity = "0.6"
             }
         } else {
-            pieceGame.classList.add("opacity-30")
+            pieceGame.style.opacity = "0.3"
         }
     }
 }
 
 export function addOpacityIfMoveForwardPiece(playerColors: PlayerColors, gameBoard: HTMLElement, currentPosition: Index, nextPosition: Index, colorPlayer: PlayerColor) {
-    const cellCurrentPosition = gameBoard.querySelector(`#cell-${currentPosition}`)
+    const cellCurrentPosition = gameBoard.querySelector(`#cell-${currentPosition}`) as HTMLElement
     if (cellCurrentPosition) {
-        cellCurrentPosition.classList.add("opacity-30")
+        cellCurrentPosition.style.opacity = "0.3"
     }
-    const cellNextPosition = gameBoard.querySelector(`#cell-${nextPosition}`)
+    const cellNextPosition = gameBoard.querySelector(`#cell-${nextPosition}`) as HTMLElement
     if (cellNextPosition) {
         if (cellNextPosition.hasChildNodes()) {
             const child = cellNextPosition.childNodes[0] as HTMLElement
@@ -33,29 +31,28 @@ export function addOpacityIfMoveForwardPiece(playerColors: PlayerColors, gameBoa
                 const childIndex = child.id.split("-")[2]
                 const playerColor = playerColors[childColor]
                 const indexPathPrison = playerColor.pieces[parseInt(childIndex)].indexPrison
-                const cell = gameBoard.querySelector(`#cell-${indexPathPrison}`)
+                const cell = gameBoard.querySelector(`#cell-${indexPathPrison}`) as HTMLElement
                 if (cell) {
-                    cell.classList.remove("opacity-30")
-                    cell.classList.add("opacity-60")
+                    cell.style.opacity = "0.6"
                 }
-                cellNextPosition.classList.remove("opacity-30")
+                cellNextPosition.style.removeProperty("opacity")
             }
         }
-        cellNextPosition.classList.remove("opacity-30")
+        cellNextPosition.style.removeProperty("opacity")
     }
 }
 
 export function removeOpacity(gameBoard: HTMLElement) {
-    const piecesGame = gameBoard.querySelectorAll('.pieceGame')
+    const piecesGame: HTMLElement[] = gameBoard.querySelectorAll('.pieceGame') as HTMLElement[]
     for (const pieceGame of piecesGame) {
         if (pieceGame.hasChildNodes()) {
-            if (pieceGame.classList.contains("opacity-60"))
-                pieceGame.classList.remove("opacity-60")
-            else if (pieceGame.classList.contains("opacity-30"))
-                pieceGame.classList.remove("opacity-30")
+            if (pieceGame.style.opacity === "0.6")
+                pieceGame.style.removeProperty("opacity")
+            else if (pieceGame.style.opacity === "0.3")
+                pieceGame.style.removeProperty("opacity")
         } else {
-            if (pieceGame.classList.contains("opacity-30"))
-                pieceGame.classList.remove("opacity-30")
+            if (pieceGame.style.opacity === "0.3")
+                pieceGame.style.removeProperty("opacity")
         }
     }
 }

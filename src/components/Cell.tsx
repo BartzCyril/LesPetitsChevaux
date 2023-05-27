@@ -1,11 +1,12 @@
 import React, {useRef, useMemo, useEffect} from 'react';
-import {CellState} from '@/type/GameBoard';
+import {CellEmpty, CellState} from '@/type/GameBoard';
 import PieceGame from '@/components/PieceGame';
+import { PlayerColor } from '@/type/PlayerColor';
 
 type CellProps = {
     color: CellState;
     id: string;
-    pushListDomPieces: (color: string, piece: any) => void;
+    pushListDomPieces: (color: PlayerColor, piece: HTMLElement) => void;
 };
 
 export function Cell({color, id, pushListDomPieces}: CellProps) {
@@ -18,7 +19,8 @@ export function Cell({color, id, pushListDomPieces}: CellProps) {
             id === '9' || id === '10' || id === '20' || id === '21' ||
             id === '99' || id === '100' || id === '110' || id === '111'
         ) {
-            pushListDomPieces(color, pieceGameRef.current);
+            if (pieceGameRef.current)
+                pushListDomPieces(color as PlayerColor, pieceGameRef.current as HTMLElement);
         }
     }, [id, color, pushListDomPieces]);
 

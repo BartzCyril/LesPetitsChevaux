@@ -25,17 +25,17 @@ function startingCellContainChild(playerColors: PlayerColors, gameBoard: HTMLEle
     return false
 }
 
-function checkIfClickedChildMatchesStartingCell(playerColors: PlayerColors, gameBoard: HTMLElement, turn: PlayerColor, pieceIndex: string): boolean {
+function checkIfClickedChildMatchesStartingCell(playerColors: PlayerColors, gameBoard: HTMLElement, turn: PlayerColor, pieceIndex: Index): boolean {
     const startingCell = gameBoard.querySelector(`#cell-${playerColors[turn].pathPiece[0]}`)
     if (startingCell && startingCell.hasChildNodes()) {
         const child = startingCell.childNodes[0] as HTMLElement
-        const index = child.id.match(/piece-\w+-(\d+)/)?.[1]
-        return index === pieceIndex
+        const index = child.id.split("-")[2]
+        return parseInt(index) === pieceIndex
     }
     return false
 }
 
-function checkIfPlayerClickedOnPieceBlockingStartingCell(playerColors: PlayerColors, gameBoard: HTMLElement, indexPath: Index, pieceIndex: string, turn: PlayerColor, diceResult: number) {
+function checkIfPlayerClickedOnPieceBlockingStartingCell(playerColors: PlayerColors, gameBoard: HTMLElement, indexPath: Index, pieceIndex: Index, turn: PlayerColor, diceResult: number) {
     const cell = gameBoard.querySelector(`#cell-${indexPath}`)
     const playerColor = playerColors[turn]
     if (cell && cell.hasChildNodes()) {
@@ -50,16 +50,16 @@ function checkIfPlayerClickedOnPieceBlockingStartingCell(playerColors: PlayerCol
                 isBlockNextCell = true
         }
         if (!isBlockNextCell) {
-            return pieceIndex === childIndex
+            return pieceIndex === parseInt(childIndex)
         }
     }
     return true
 }
 
-export function checkIfPlayerClickedOnIncorrectPiece(playerColors: PlayerColors, pieceIndex: string, diceResult: number, isPieceOut: boolean, gameBoard: HTMLElement, turn: PlayerColor, errorMessage: ErrorMessage | null, handleError: (message: ErrorMessage | null) => void): boolean {
+export function checkIfPlayerClickedOnIncorrectPiece(playerColors: PlayerColors, pieceIndex: Index, diceResult: number, isPieceOut: boolean, gameBoard: HTMLElement, turn: PlayerColor, errorMessage: ErrorMessage | null, handleError: (message: ErrorMessage | null) => void): boolean {
     const numberPieceOutColor = numberPieceOut(playerColors,turn)
     if (numberPieceOutColor >= 1 && numberPieceOutColor <= 4) {
-        if (!home(gameBoard, playerColors, turn, pieceIndex, diceResult, handleError) && playerColors[turn].pathPiece[playerColors[turn].pieces[parseInt(pieceIndex)].indexPath + diceResult]) {
+        if (!home(gameBoard, playerColors, turn, pieceIndex, diceResult, handleError) && playerColors[turn].pathPiece[playerColors[turn].pieces[pieceIndex].indexPath + diceResult]) {
             return true
         }
     }
@@ -70,7 +70,6 @@ export function checkIfPlayerClickedOnIncorrectPiece(playerColors: PlayerColors,
             return false
         if (startingCellContainChild(playerColors,gameBoard, turn) && isPieceOut && numberPieceOutColor > 1) {
             if (isConflictBetweenSameColor(turn, gameBoard, nextIndexPath, handleError)) {
-                console.log(checkIfPlayerClickedOnPieceBlockingStartingCell(playerColors,gameBoard, nextIndexPath, pieceIndex, turn, diceResult))
                 if (!checkIfPlayerClickedOnPieceBlockingStartingCell(playerColors,gameBoard, nextIndexPath, pieceIndex, turn, diceResult)) {
                     handleError(ErrorMessage.CLICK_PIECE_BLOCK_START_CELL)
                     return true

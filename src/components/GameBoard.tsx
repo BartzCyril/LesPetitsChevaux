@@ -8,7 +8,14 @@ import {PlayerColor} from "@/type/PlayerColor";
 import {ColorButton} from "@/components/ColorButton";
 import {ErrorMessage} from "@/type/ErrorMessage";
 import {addOpacity, removeOpacity} from "@/game/ui/opacity";
-import {isPieceOut, moveForwardPiece, playerColors, pushListDomPieces, switchTurn} from "@/game/functions";
+import {
+    isPieceOut,
+    moveForwardPiece,
+    playerColors,
+    pushListDomPieces,
+    switchPlayer,
+    switchTurn
+} from "@/game/functions";
 
 type GameBoardProps = {
     color: PlayerColor,
@@ -30,8 +37,7 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
         Prison.BLUE, Prison.BLUE, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, StartingPoint.BLUE, CellEmpty.BLACK, CellEmpty.BLACK, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, Prison.RED, Prison.RED
     ]
     const [diceValue, setDiceValue] = useState(-1);
-    const [turn, setTurn] = useState<PlayerColor | string>("")
-    const [nextTurn, setNextTurn] = useState("")
+    const [turn, setTurn] = useState<PlayerColor>(colorStart)
     const [error, setError] = useState<ErrorMessage | null>(null)
     const gameBoardRef = useRef(null)
     const [preGame, setPreGame] = useState(true)
@@ -39,25 +45,27 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
     const [canRollDice, setCanRollDice] = useState(true)
     const handleDiceRoll = (value: number) => {
         setDiceValue(value)
-        if (turn === "") {
-            setTurn(colorStart)
-            setNextTurn(colorStart)
-            playerColors["red"].isPlay = false
-        }
-        if (turn !== "") {
-            if (!isPieceOut(turn as PlayerColor) && diceValue !== 6) {
-                if (preGame) {
-                    if (count === 3) {
-                        setCount(1)
-                        playerColors[turn].isPlay = true
-                    } else
-                        setCount(c => c+1)
-                } else {
-                    playerColors[turn].isPlay = true
+        if (preGame) {
+            if (value === 6) {
+                setPreGame(false)
+                setCanRollDice(false)
+            }
+            else {
+                setDiceValue(-1)
+                setCount(c => c + 1)
+                if (count === 3) {
+                    setCount(1)
+                    handleSwitchTurn()
                 }
             }
-            if (playerColors[turn].isPlay) {
+        } else {
+            if (!isPieceOut(turn) && value === 6)
+                setCanRollDice(false)
+            if (gameBoardRef.current && switchPlayer(gameBoardRef.current as HTMLElement, turn, value)) {
                 handleSwitchTurn()
+                setDiceValue(-1)
+            } else {
+                setCanRollDice(false)
             }
         }
     }
@@ -66,47 +74,25 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
         setTurn(switchTurn(turn as PlayerColor));
     }, [turn])
 
-    const handleSwitchNextTurn = useCallback(() => {
-        setNextTurn(switchTurn(turn as PlayerColor));
-    }, [turn])
-
     const handleError = (message: ErrorMessage | null) => {
         setError(message)
     }
 
     useEffect(() => {
-
-        if (turn !== "") {
-            if (preGame && diceValue === 6) {
-                setPreGame(false)
-            }
-            if (!isPieceOut(turn as PlayerColor) && diceValue !== 6) {
-                if (preGame) {
-                    if (count === 3)
-                        setNextTurn(switchTurn(turn as PlayerColor));
-                }
-                else
-                    setNextTurn(switchTurn(turn as PlayerColor));
-            }
-        }
-    }, [turn, count, preGame, diceValue])
-
-    useEffect(() => {
         const gameBoard = gameBoardRef.current as HTMLElement | null;
-
         if (color === colorStart)
             addOpacity(gameBoard as HTMLElement, colorStart as PlayerColor)
-        if (nextTurn === color)
-            addOpacity(gameBoard as HTMLElement, nextTurn as PlayerColor)
+        if (turn === color)
+            addOpacity(gameBoard as HTMLElement, turn as PlayerColor)
         else
             removeOpacity(gameBoard as HTMLElement)
 
         const handleClick: EventListenerObject = {
             handleEvent(event: MouseEvent) {
                 const piece = event.target as HTMLElement;
-                const indexPlayerColor = piece.id.match(/piece-\w+-(\d+)/)?.[1];
-                if (piece.classList.contains(turn) && indexPlayerColor && diceValue !== -1) {
-                    if (moveForwardPiece(gameBoard as HTMLElement, diceValue, indexPlayerColor, turn as PlayerColor, handleSwitchNextTurn, handleError, error, color) !== -1) {
+                const indexPlayerColor = parseInt(piece.id.split("-")[2])
+                if (piece.classList.contains(turn) && diceValue !== -1) {
+                    if (moveForwardPiece(gameBoard as HTMLElement, diceValue, indexPlayerColor, turn as PlayerColor, handleSwitchTurn, handleError, error, color) !== -1) {
                         setCanRollDice(true)
                         setDiceValue(-1)
                     }
@@ -114,27 +100,34 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
             }
         };
 
-        if (nextTurn !== "") {
-            playerColors[nextTurn].listDomPieces.forEach((piece) => {
+            playerColors[turn].listDomPieces.forEach((piece) => {
                 if (piece)
                     piece.addEventListener('click', handleClick);
             })
-        }
 
         return () => {
-            if (nextTurn !== "") {
-                playerColors[nextTurn].listDomPieces.forEach((piece) => {
+                playerColors[turn].listDomPieces.forEach((piece) => {
                     if (piece)
                         piece.removeEventListener('click', handleClick);
                 })
-            }
         };
-    }, [diceValue, turn, handleSwitchTurn, nextTurn, handleSwitchNextTurn]);
+    }, [diceValue, turn]);
 
     return (
         <>
             <p className="flex mb-2">
-                C&lsquo;est au tour du joueur {nextTurn === "" ? <ColorButton color={colorStart}/> : <ColorButton color={nextTurn as PlayerColor}/>} de jouer
+                {color === turn ? (
+                    <span>C'est à votre tour de jouer</span>
+                ) : (
+                    <span className="flex">
+    C'est au tour du joueur {turn === colorStart ? (
+                        <ColorButton color={colorStart} />
+                    ) : (
+                        <ColorButton color={turn as PlayerColor} />
+                    )} de jouer
+  </span>
+                )}
+
             </p>
             {error ? <p className="mb-2">{error}</p> : ""}
             <div className="gameBoard" ref={gameBoardRef}>

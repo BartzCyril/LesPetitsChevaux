@@ -1,5 +1,3 @@
-import {number} from "zod";
-
 export enum Prison {
     RED = "red",
     YELLOW = "yellow",
@@ -33,6 +31,6 @@ export enum PieceGameColor {
     GREEN = "green"
 }
 
-export type CellState = Prison | StartingPoint | Stable | CellEmpty
+export type CellState = Prison | StartingPoint | Stable | CellEmpty | PieceGameColor
 export type GameBoard = CellState[]
 export type Index = number
