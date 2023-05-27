@@ -36,7 +36,7 @@ export let playerColors: PlayerColors = {
     }
 }
 
-export function pushListDomPieces(color: PlayerColor, piece: HTMLElement) {
+export function pushListDomPieces(color: string, piece: HTMLElement) {
     if (!piece)
         return
     playerColors[color].listDomPieces.push(piece)

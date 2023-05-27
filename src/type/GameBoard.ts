@@ -1,3 +1,5 @@
+import { PlayerColor } from "./PlayerColor"
+
 export enum Prison {
     RED = "red",
     YELLOW = "yellow",
