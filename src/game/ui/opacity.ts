@@ -3,7 +3,7 @@ import {Index} from "@/type/GameBoard";
 import {PlayerColors} from "@/interface/GameBoard";
 
 export function addOpacity(gameBoard: HTMLElement, turn: PlayerColor) {
-    const piecesGame: HTMLElement[] = gameBoard.querySelectorAll('.pieceGame') as HTMLElement[]
+    const piecesGame: HTMLElement[] = Array.from(gameBoard.querySelectorAll('.pieceGame')) as HTMLElement[];
     for (const pieceGame of piecesGame) {
         if (pieceGame.hasChildNodes()) {
             const child = pieceGame.childNodes[0] as HTMLElement
@@ -43,7 +43,7 @@ export function addOpacityIfMoveForwardPiece(playerColors: PlayerColors, gameBoa
 }
 
 export function removeOpacity(gameBoard: HTMLElement) {
-    const piecesGame: HTMLElement[] = gameBoard.querySelectorAll('.pieceGame') as HTMLElement[]
+    const piecesGame: HTMLElement[] = Array.from(gameBoard.querySelectorAll('.pieceGame')) as HTMLElement[];
     for (const pieceGame of piecesGame) {
         if (pieceGame.hasChildNodes()) {
             if (pieceGame.style.opacity === "0.6")
