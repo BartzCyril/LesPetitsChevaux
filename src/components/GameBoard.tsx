@@ -117,10 +117,10 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
         <>
             <p className="flex mb-2">
                 {color === turn ? (
-                    <span>C'est à votre tour de jouer</span>
+                    <span>C&lsquo;est à votre tour de jouer</span>
                 ) : (
                     <span className="flex">
-    C'est au tour du joueur {turn === colorStart ? (
+    C&lsquo;est au tour du joueur {turn === colorStart ? (
                         <ColorButton color={colorStart} />
                     ) : (
                         <ColorButton color={turn as PlayerColor} />
