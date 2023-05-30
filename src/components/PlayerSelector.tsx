@@ -40,6 +40,7 @@ export function PlayerSelector({handleStartGame, color, handleColorStart}: Playe
     const [count, setCount] = useState(0)
     const [message, setMessage] = useState<JSX.Element | null>(null)
     const [messageCurrentPlayer, setMessageCurrentPlayer] = useState<string>("")
+    const [botRollDice, setBotRollDice] = useState(false)
     const onDiceRoll = (value: number) => {
         setDiceValue(value)
         setCount(c => c + 1)
@@ -92,19 +93,26 @@ export function PlayerSelector({handleStartGame, color, handleColorStart}: Playe
                 ...prevResults,
                 [turn]: diceValue,
             }));
-            if (switchTurn(turn) === color && count !== 4)
+            if (switchTurn(turn) === color && count !== 4) {
+                setBotRollDice(false)
                 setMessageCurrentPlayer("C'est à vous de lancer le dé !")
-            else
+            }
+            else {
+                setBotRollDice(true)
                 setMessageCurrentPlayer("")
+            }
         } else {
             if (colors[0] === color)
                 setMessageCurrentPlayer("C'est à vous de lancer le dé !")
+            else
+                setBotRollDice(true)
         }
     }, [diceValue, turn])
 
     useEffect(() => {
         if (count === 4) {
             setMessage(checkWinner(diceResults))
+            setBotRollDice(false)
         }
     }, [count, diceResults, checkWinner]);
 
@@ -134,7 +142,7 @@ export function PlayerSelector({handleStartGame, color, handleColorStart}: Playe
                 </tbody>
             </table>
             {renderToString(message as ReactElement).startsWith("<div") ? <Button handleStart={handleStartGame} buttonText={"Commencer la partie"}/> :
-                <Dice onDiceRoll={onDiceRoll} canRoll={true}/>}
+                <Dice onDiceRoll={onDiceRoll} canRoll={true} botRollDice={botRollDice}/>}
         </section>
     )
 }

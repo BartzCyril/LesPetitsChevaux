@@ -15,7 +15,7 @@ function numberPieceOut(playerColors: PlayerColors, turn: string): number {
     return count
 }
 
-function startingCellContainChild(playerColors: PlayerColors, gameBoard: HTMLElement, turn: PlayerColor) {
+export function startingCellContainChild(playerColors: PlayerColors, gameBoard: HTMLElement, turn: PlayerColor) {
     const startingCell = gameBoard.querySelector(`#cell-${playerColors[turn].pathPiece[0]}`)
     if (startingCell && startingCell.hasChildNodes()) {
         const child = startingCell.childNodes[0] as HTMLElement
@@ -56,7 +56,7 @@ function checkIfPlayerClickedOnPieceBlockingStartingCell(playerColors: PlayerCol
     return true
 }
 
-export function checkIfPlayerClickedOnIncorrectPiece(playerColors: PlayerColors, pieceIndex: Index, diceResult: number, isPieceOut: boolean, gameBoard: HTMLElement, turn: PlayerColor, errorMessage: ErrorMessage | null, handleError: (message: ErrorMessage | null) => void): boolean {
+export function checkIfPlayerClickedOnIncorrectPiece(playerColors: PlayerColors, pieceIndex: Index, diceResult: number, isPieceOut: boolean, gameBoard: HTMLElement, turn: PlayerColor, errorMessage?: ErrorMessage | null, handleError?: (message: ErrorMessage | null) => void): boolean {
     const numberPieceOutColor = numberPieceOut(playerColors,turn)
     if (numberPieceOutColor >= 1 && numberPieceOutColor <= 4) {
         if (!home(gameBoard, playerColors, turn, pieceIndex, diceResult, handleError) && playerColors[turn].pathPiece[playerColors[turn].pieces[pieceIndex].indexPath + diceResult]) {
@@ -71,19 +71,25 @@ export function checkIfPlayerClickedOnIncorrectPiece(playerColors: PlayerColors,
         if (startingCellContainChild(playerColors,gameBoard, turn) && isPieceOut && numberPieceOutColor > 1) {
             if (isConflictBetweenSameColor(turn, gameBoard, nextIndexPath, handleError)) {
                 if (!checkIfPlayerClickedOnPieceBlockingStartingCell(playerColors,gameBoard, nextIndexPath, pieceIndex, turn, diceResult)) {
-                    handleError(ErrorMessage.CLICK_PIECE_BLOCK_START_CELL)
+                    if (handleError) {
+                        handleError(ErrorMessage.CLICK_PIECE_BLOCK_START_CELL)
+                    }
                     return true
                 }
                 return false
             }
-            handleError(ErrorMessage.CLEAR_START_CELL_FIRST)
+            if (handleError) {
+                handleError(ErrorMessage.CLEAR_START_CELL_FIRST)
+            }
             return true
         }
         if (!isPieceOut)
             return false
         else {
             if (numberPieceOutColor >= 1 && diceResult === 6) {
-                handleError(ErrorMessage.RELEASE_PIECE_FIRST)
+                if (handleError) {
+                    handleError(ErrorMessage.RELEASE_PIECE_FIRST)
+                }
                 return true
             }
         }

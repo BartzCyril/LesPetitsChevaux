@@ -1,6 +1,6 @@
 'use client'
 
-import {CellEmpty, GameBoard, Index, Prison, Stable, StartingPoint} from "@/type/GameBoard";
+import {CellEmpty, GameBoard, Prison, Stable, StartingPoint} from "@/type/GameBoard";
 import {Cell} from "@/components/Cell";
 import {Dice} from "@/components/Dice";
 import {useCallback, useEffect, useRef, useState} from "react";
@@ -16,6 +16,7 @@ import {
     switchPlayer,
     switchTurn
 } from "@/game/functions";
+import {moveForwardPieceBot} from "@/game/bot/functions";
 
 type GameBoardProps = {
     color: PlayerColor,
@@ -43,12 +44,17 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
     const [preGame, setPreGame] = useState(true)
     const [count, setCount] = useState(1)
     const [canRollDice, setCanRollDice] = useState(true)
+    const [botRollDice, setBotRollDice] = useState(false)
+    const [a, setA] = useState(0)
     const handleDiceRoll = (value: number) => {
-        setDiceValue(value)
+        setA(c => c + 1)
         if (preGame) {
             if (value === 6) {
                 setPreGame(false)
                 setCanRollDice(false)
+                if (turn !== color) {
+                    moveForwardPieceBot(gameBoardRef.current as HTMLElement, value, turn, handleSwitchTurn)
+                }
             }
             else {
                 setDiceValue(-1)
@@ -59,6 +65,10 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
                 }
             }
         } else {
+            if (turn !== color) {
+                setCanRollDice(true)
+                moveForwardPieceBot(gameBoardRef.current as HTMLElement, value, turn, handleSwitchTurn)
+            }
             if (!isPieceOut(turn) && value === 6)
                 setCanRollDice(false)
             if (gameBoardRef.current && switchPlayer(gameBoardRef.current as HTMLElement, turn, value)) {
@@ -68,6 +78,7 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
                 setCanRollDice(false)
             }
         }
+        setDiceValue(value)
     }
 
     const handleSwitchTurn = useCallback(() => {
@@ -79,13 +90,15 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
     }
 
     useEffect(() => {
+
         const gameBoard = gameBoardRef.current as HTMLElement | null;
         if (color === colorStart)
             addOpacity(gameBoard as HTMLElement, colorStart as PlayerColor)
         if (turn === color)
             addOpacity(gameBoard as HTMLElement, turn as PlayerColor)
-        else
+        else {
             removeOpacity(gameBoard as HTMLElement)
+        }
 
         const handleClick: EventListenerObject = {
             handleEvent(event: MouseEvent) {
@@ -100,18 +113,25 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
             }
         };
 
+        if (turn === color) {
+            setBotRollDice(false)
             playerColors[turn].listDomPieces.forEach((piece) => {
                 if (piece)
                     piece.addEventListener('click', handleClick);
             })
+        } else {
+            setBotRollDice(true)
+        }
 
         return () => {
+            if (turn === color) {
                 playerColors[turn].listDomPieces.forEach((piece) => {
                     if (piece)
                         piece.removeEventListener('click', handleClick);
                 })
+            }
         };
-    }, [diceValue, turn]);
+    }, [diceValue, turn, a]);
 
     return (
         <>
@@ -129,14 +149,14 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
                 )}
 
             </p>
-            {error ? <p className="mb-2">{error}</p> : ""}
+
             <div className="gameBoard" ref={gameBoardRef}>
                 <div className="gameBoard-grid">
                     {GameBoard.map((color, index) => <Cell color={color} id={`${index}`} key={`${index}`}
                                                            pushListDomPieces={pushListDomPieces}/>)}
                 </div>
             </div>
-            <Dice onDiceRoll={handleDiceRoll} canRoll={canRollDice} handleError={handleError}/>
+            <Dice onDiceRoll={handleDiceRoll} canRoll={canRollDice} handleError={handleError} botRollDice={botRollDice}/>
         </>
     )
 }

@@ -77,7 +77,7 @@ export function isPieceOut(turn: PlayerColor): boolean {
     return count >= 1
 }
 
-function getPieceOut(turn: PlayerColor): Piece[] {
+export function getPieceOut(turn: PlayerColor): Piece[] {
     const pieces = playerColors[turn].pieces
     const array: Piece[] = []
     for (let i = 0; i < pieces.length; i++) {
@@ -116,14 +116,14 @@ export function switchPlayer(gameBoard: HTMLElement, turn: PlayerColor, diceValu
     }
 }
 
-function updateGameBoard(gameBoard: HTMLElement, pieceIndex: Index, nextIndex: Index, turn: PlayerColor) {
+export function updateGameBoard(gameBoard: HTMLElement, pieceIndex: Index, nextIndex: Index, turn: PlayerColor) {
     const piece = gameBoard.querySelector(`#piece-${turn}-${pieceIndex}`)
     const nextPosition = gameBoard.querySelector(`#cell-${nextIndex}`)
     if (piece && nextPosition)
         nextPosition.appendChild(piece);
 }
 
-export function moveForwardPiece(gameBoard: HTMLElement, diceResult: number, pieceIndex: Index, turn: PlayerColor, handleSwitchTurn: () => void, handleError: (message: ErrorMessage | null) => void, error: ErrorMessage | null, colorPlayer: PlayerColor) {
+export function moveForwardPiece(gameBoard: HTMLElement, diceResult: number, pieceIndex: Index, turn: PlayerColor, handleSwitchTurn: () => void, handleError?: (message: ErrorMessage | null) => void, error?: ErrorMessage | null, colorPlayer: PlayerColor) {
     const playerColor = playerColors[turn]
     if (!playerColor.pieces[pieceIndex].out) {
         if (diceResult === 6) {
@@ -135,12 +135,16 @@ export function moveForwardPiece(gameBoard: HTMLElement, diceResult: number, pie
                 playerColor.pieces[pieceIndex].out = true
                 playerColor.pieces[pieceIndex].indexPath = 0
                 updateGameBoard(gameBoard, pieceIndex, playerColor.pathPiece[0], turn)
-                handleError(null)
+                if (handleError) {
+                    handleError(null)
+                }
             } else {
                 return -1
             }
         } else {
-            handleError(ErrorMessage.ROLL_SIX_TO_RELEASE)
+            if (handleError) {
+                handleError(ErrorMessage.ROLL_SIX_TO_RELEASE)
+            }
             return -1
         }
     } else {
@@ -152,7 +156,9 @@ export function moveForwardPiece(gameBoard: HTMLElement, diceResult: number, pie
                 addOpacityIfMoveForwardPiece(playerColors, gameBoard, playerColor.pathPiece[playerColor.pieces[pieceIndex].indexPath], playerColor.pathPiece[nextIndexPath], turn)
             playerColor.pieces[pieceIndex].indexPath = nextIndexPath
             updateGameBoard(gameBoard, pieceIndex, playerColor.pathPiece[nextIndexPath], turn)
-            handleError(null)
+            if (handleError) {
+                handleError(null)
+            }
             if (win(playerColors, gameBoard, turn))
                 alert("win !!!!")
         } else {

@@ -21,7 +21,7 @@ export function isConflictBetweenSameColor(turn: PlayerColor, gameBoard: HTMLEle
     return false
 }
 
-export function isConflitBetweenDifferentColor(playerColors: PlayerColors, gameBoard: HTMLElement, indexPath: Index, turn: PlayerColor, handleError: (message: ErrorMessage | null) => void) {
+export function isConflitBetweenDifferentColor(playerColors: PlayerColors, gameBoard: HTMLElement, indexPath: Index, turn: PlayerColor, handleError?: (message: ErrorMessage | null) => void) {
     const cell = gameBoard.querySelector(`#cell-${indexPath}`)
     if (cell && cell.childNodes[0]) {
         if (!isConflictBetweenSameColor(turn, gameBoard, indexPath, handleError)) {
