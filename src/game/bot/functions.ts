@@ -41,6 +41,8 @@ function forwardPiece(playerColor: PlayerColors[PlayerColor], pieceOut: HTMLElem
             if (playerColor.pathPiece[playerColorPiece.indexPath + diceResult] && !isConflitBetweenDifferentColor(playerColors, gameBoard, nextPosition, turn)) {
                 playerColorPiece.indexPath = playerColorPiece.indexPath + diceResult
                 updateGameBoard(gameBoard, index, nextPosition, turn)
+                if (win(playerColors, gameBoard, turn))
+                    alert("win !!!!")
                 if (diceResult === 6)
                     return
                 handleSwitchTurn()
@@ -66,6 +68,7 @@ function eatPiece(playerColor: PlayerColors[PlayerColor], pieceOut: HTMLElement[
                     const elementPrison = gameBoard.querySelector(`#cell-${childPlayer.indexPrison}`)
                     childPlayer.out = false
                     childPlayer.indexPath = -1
+                    playerColorPiece.indexPath = playerColorPiece.indexPath + diceResult
                     if (elementPrison)
                         elementPrison.appendChild(child)
                     if (cell)
@@ -107,8 +110,10 @@ export function moveForwardPieceBot(gameBoard: HTMLElement, diceResult: number, 
                     forwardPiece(playerColor, pieceOut, diceResult, gameBoard, handleSwitchTurn, turn)
                 }
                 else {
-                    if (eatPiece(playerColor, pieceOut, diceResult, gameBoard, handleSwitchTurn, turn))
+                    if (eatPiece(playerColor, pieceOut, diceResult, gameBoard, handleSwitchTurn, turn)) {
+                        handleSwitchTurn()
                         return
+                    }
                     forwardPiece(playerColor, pieceOut, diceResult, gameBoard, handleSwitchTurn, turn)
                 }
                 return
@@ -117,17 +122,22 @@ export function moveForwardPieceBot(gameBoard: HTMLElement, diceResult: number, 
                 if (!startingCellContainChild(playerColors, gameBoard, turn) && !isConflitBetweenDifferentColor(playerColors, gameBoard, playerColor.pathPiece[0], turn)) {
                     outPiece(playerColor, piecesNotOut[0], gameBoard, turn)
                 } else {
-                    if (eatPiece(playerColor, pieceOut, diceResult, gameBoard, handleSwitchTurn, turn))
+                    if (eatPiece(playerColor, pieceOut, diceResult, gameBoard, handleSwitchTurn, turn)) {
                         return
+                    }
                     forwardPiece(playerColor, pieceOut, diceResult, gameBoard, handleSwitchTurn, turn)
                 }
                 return
             }
         } else {
-            if (!eatPiece(playerColor, pieceOut, diceResult, gameBoard, handleSwitchTurn, turn))
-                forwardPiece(playerColor, pieceOut, diceResult, gameBoard, handleSwitchTurn, turn)
-            if (win(playerColors, gameBoard, turn))
-                alert("win !!!!")
+            if (eatPiece(playerColor, pieceOut, diceResult, gameBoard, handleSwitchTurn, turn)) {
+                if (diceResult === 6)
+                    return
+                handleSwitchTurn()
+                return
+            }
+            forwardPiece(playerColor, pieceOut, diceResult, gameBoard, handleSwitchTurn, turn)
         }
     }
 }
+// à un moment le bot joue à l'infini jusqu'a obtenir un 6 ?? probleme entre le tableau et le dom (difference de pions qui sont sorti)
