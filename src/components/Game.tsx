@@ -46,5 +46,4 @@ export function Game() {
             <GameBoard color={color as PlayerColor} colorStart={colorStart as PlayerColor}/>
         )
     }
-
 }

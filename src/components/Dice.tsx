@@ -2,20 +2,25 @@
 
 import {useCallback, useEffect, useRef} from "react";
 import {ErrorMessage} from "@/type/ErrorMessage";
+import {PlayerColor} from "@/type/PlayerColor";
 
 type DiceProps = {
     onDiceRoll: (value: number) => void
     canRoll?: boolean,
     handleError?: (message: ErrorMessage | null) => void,
-    botRollDice: boolean
+    botRollDice: boolean,
+    playerColor?: PlayerColor,
+    mainColor?: PlayerColor,
+    disabled: boolean
 }
 
-export function Dice({onDiceRoll, canRoll, handleError, botRollDice}: DiceProps) {
+export function Dice({onDiceRoll, canRoll, handleError, botRollDice, mainColor, playerColor, disabled}: DiceProps) {
     const buttonRef = useRef(null);
     const handleDiceClick = useCallback(() => {
-        if (!canRoll) {
+        if (mainColor === playerColor && !canRoll) {
             if (handleError) {
                 handleError(ErrorMessage.CANNOT_REROLL)
+                return
             }
         }
         const dice = buttonRef.current as HTMLElement | null
@@ -30,14 +35,6 @@ export function Dice({onDiceRoll, canRoll, handleError, botRollDice}: DiceProps)
             setTimeout(() => {
                 // Génération d'un nombre aléatoire entre 1 et 6
                 const randomNumber = Math.floor(Math.random() * 6) + 1;
-                /**let randomNumber = Math.random();
-                 * const randomNumber = 6
-                if (randomNumber < 0.5) {
-                    randomNumber = 6;
-                } else {
-                    randomNumber = 2;
-                }**/
-                //const randomNumber = 6
                 onDiceRoll(randomNumber)
                 // Affichage du nombre de points correspondant
                 for (let i = 0; i < randomNumber; i++) {
@@ -61,7 +58,7 @@ export function Dice({onDiceRoll, canRoll, handleError, botRollDice}: DiceProps)
     }, [botRollDice, handleDiceClick, onDiceRoll])
 
     return (
-        <button className="dice" ref={buttonRef} onClick={handleDiceClick}>
+        <button className="dice" ref={buttonRef} onClick={handleDiceClick} disabled={disabled}>
             <div className="dot" id="dot-1"></div>
             <div className="dot" id="dot-2"></div>
             <div className="dot" id="dot-3"></div>

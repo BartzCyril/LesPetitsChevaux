@@ -1,7 +1,7 @@
 'use client'
 
 import {PlayerColor} from "@/type/PlayerColor";
-import {useEffect, useState, useCallback, ReactElement} from "react";
+import {ReactElement, useCallback, useEffect, useState} from "react";
 import {Dice} from "@/components/Dice";
 import {Button} from "@/components/Button";
 import {PlayerScores} from "@/interface/PlayerScores";
@@ -142,7 +142,7 @@ export function PlayerSelector({handleStartGame, color, handleColorStart}: Playe
                 </tbody>
             </table>
             {renderToString(message as ReactElement).startsWith("<div") ? <Button handleStart={handleStartGame} buttonText={"Commencer la partie"}/> :
-                <Dice onDiceRoll={onDiceRoll} canRoll={true} botRollDice={botRollDice}/>}
+                <Dice onDiceRoll={onDiceRoll} canRoll={true} botRollDice={botRollDice} disabled={color !== switchTurn(turn) || (turn === "" && color !== "red")}/>}
         </section>
     )
 }

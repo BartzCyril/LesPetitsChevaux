@@ -1,7 +1,6 @@
 import React, {useRef, useMemo, useEffect} from 'react';
 import {CellState} from '@/type/GameBoard';
 import PieceGame from '@/components/PieceGame';
-import { PlayerColor } from '@/type/PlayerColor';
 
 type CellProps = {
     color: CellState;

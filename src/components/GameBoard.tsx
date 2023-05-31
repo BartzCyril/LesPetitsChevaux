@@ -45,15 +45,20 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
     const [count, setCount] = useState(1)
     const [canRollDice, setCanRollDice] = useState(true)
     const [botRollDice, setBotRollDice] = useState(false)
-    const [a, setA] = useState(0)
+    const [forwardBot, setForwardBot] = useState(0)
     const handleDiceRoll = (value: number) => {
-        setA(c => c + 1)
+        setForwardBot(c => c + 1)
+        setDiceValue(value)
         if (preGame) {
             if (value === 6) {
                 setPreGame(false)
-                setCanRollDice(false)
+                if (turn === color)
+                    setCanRollDice(false)
                 if (turn !== color) {
-                    moveForwardPieceBot(gameBoardRef.current as HTMLElement, value, turn, handleSwitchTurn)
+                    if (gameBoardRef.current)
+                        moveForwardPieceBot(gameBoardRef.current as HTMLElement, value, turn, handleSwitchTurn)
+                    setDiceValue(-1)
+                    return
                 }
             }
             else {
@@ -62,23 +67,25 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
                 if (count === 3) {
                     setCount(1)
                     handleSwitchTurn()
+                    setDiceValue(-1)
+                    return
                 }
             }
         } else {
             if (turn !== color) {
-                setCanRollDice(true)
-                moveForwardPieceBot(gameBoardRef.current as HTMLElement, value, turn, handleSwitchTurn)
+                if (gameBoardRef.current)
+                    moveForwardPieceBot(gameBoardRef.current as HTMLElement, value, turn, handleSwitchTurn)
             }
-            if (!isPieceOut(turn) && value === 6)
+            if (!isPieceOut(turn) && value === 6 && turn === color)
                 setCanRollDice(false)
             if (gameBoardRef.current && switchPlayer(gameBoardRef.current as HTMLElement, turn, value)) {
                 handleSwitchTurn()
                 setDiceValue(-1)
             } else {
-                setCanRollDice(false)
+                if (turn === color)
+                    setCanRollDice(false)
             }
         }
-        setDiceValue(value)
     }
 
     const handleSwitchTurn = useCallback(() => {
@@ -131,7 +138,7 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
                 })
             }
         };
-    }, [diceValue, turn, a]);
+    }, [diceValue, turn, forwardBot]);
 
     return (
         <>
@@ -149,14 +156,14 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
                 )}
 
             </p>
-
+            {error ? <p className="mb-2">{error}</p> : ""}
             <div className="gameBoard" ref={gameBoardRef}>
                 <div className="gameBoard-grid">
                     {GameBoard.map((color, index) => <Cell color={color} id={`${index}`} key={`${index}`}
                                                            pushListDomPieces={pushListDomPieces}/>)}
                 </div>
             </div>
-            <Dice onDiceRoll={handleDiceRoll} canRoll={canRollDice} handleError={handleError} botRollDice={botRollDice}/>
+            <Dice onDiceRoll={handleDiceRoll} canRoll={canRollDice} handleError={handleError} botRollDice={botRollDice} playerColor={turn} mainColor={color} disabled={color !== turn}/>
         </>
     )
 }
