@@ -55,9 +55,10 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
                 if (turn === color)
                     setCanRollDice(false)
                 if (turn !== color) {
-                    if (gameBoardRef.current)
+                    if (gameBoardRef.current) {
                         moveForwardPieceBot(gameBoardRef.current as HTMLElement, value, turn, handleSwitchTurn)
-                    setDiceValue(-1)
+                        setDiceValue(-1)
+                    }
                     return
                 }
             }
@@ -73,8 +74,10 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
             }
         } else {
             if (turn !== color) {
-                if (gameBoardRef.current)
+                if (gameBoardRef.current) {
                     moveForwardPieceBot(gameBoardRef.current as HTMLElement, value, turn, handleSwitchTurn)
+                    setDiceValue(-1)
+                }
             }
             if (!isPieceOut(turn) && value === 6 && turn === color)
                 setCanRollDice(false)

@@ -140,4 +140,3 @@ export function moveForwardPieceBot(gameBoard: HTMLElement, diceResult: number, 
         }
     }
 }
-// à un moment le bot joue à l'infini jusqu'a obtenir un 6 ?? probleme entre le tableau et le dom (difference de pions qui sont sorti)
