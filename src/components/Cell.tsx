@@ -1,16 +1,17 @@
 import React, {useRef, useMemo, useEffect} from 'react';
 import {CellState} from '@/type/GameBoard';
 import PieceGame from '@/components/PieceGame';
+import {PlayerColor} from "@/type/PlayerColor";
 
 type CellProps = {
     color: CellState;
     id: string;
     pushListDomPieces: (color: string, piece: HTMLElement) => void;
+    colorPlayer : PlayerColor
 };
 
-export function Cell({color, id, pushListDomPieces}: CellProps) {
+export function Cell({color, id, pushListDomPieces, colorPlayer}: CellProps) {
     const pieceGameRef = useRef(null);
-
     useEffect(() => {
         if (
             id === '0' || id === '1' || id === '11' || id === '12' ||
@@ -35,7 +36,7 @@ export function Cell({color, id, pushListDomPieces}: CellProps) {
     ) {
         renderedComponent = (
             <div className={`${color} pieceGame`} id={`cell-${id}`}>
-                <PieceGame color={color} id={id} ref={pieceGameRef}/>
+                <PieceGame color={color} id={id} ref={pieceGameRef} colorPlayer={colorPlayer}/>
             </div>
         );
     } else {

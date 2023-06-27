@@ -1,12 +1,14 @@
 import {CellState} from "@/type/GameBoard";
 import {forwardRef, LegacyRef} from 'react';
+import {PlayerColor} from "@/type/PlayerColor";
 
 type PieceProps = {
-    color: CellState;
+    color: CellState | PlayerColor;
     id: string;
+    colorPlayer : PlayerColor
 };
 
-function PieceGame({color, id}: PieceProps, ref: LegacyRef<HTMLDivElement> | undefined) {
+function PieceGame({color, id, colorPlayer}: PieceProps, ref: LegacyRef<HTMLImageElement> | undefined) {
     let index: number = 0;
     if (id === "0" || id === "108" || id === "9" || id === "99")
         index = 0
@@ -18,8 +20,8 @@ function PieceGame({color, id}: PieceProps, ref: LegacyRef<HTMLDivElement> | und
         index = 3
 
     return (
-        <div className={`${color} piece`} id={`piece-${color}-${index}`} ref={ref}>
-        </div>
+        <img src={color === colorPlayer ? `./img/person-${color}.svg` : `./img/robot-${color}.svg`} className={`piece`} id={`piece-${color}-${index}`} ref={ref} alt="piece game">
+        </img>
     )
 }
 

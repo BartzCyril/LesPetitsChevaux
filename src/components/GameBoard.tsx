@@ -1,13 +1,11 @@
 'use client'
 
-import {CellEmpty, GameBoard, Prison, Stable, StartingPoint} from "@/type/GameBoard";
+import {GameBoard} from "@/type/GameBoard";
 import {Cell} from "@/components/Cell";
-import {Dice} from "@/components/Dice";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {PlayerColor} from "@/type/PlayerColor";
 import {ColorButton} from "@/components/ColorButton";
 import {ErrorMessage} from "@/type/ErrorMessage";
-import {addOpacity, removeOpacity} from "@/game/ui/opacity";
 import {
     isPieceOut,
     moveForwardPiece,
@@ -17,26 +15,16 @@ import {
     switchTurn
 } from "@/game/functions";
 import {moveForwardPieceBot} from "@/game/bot/functions";
+import {getGameBoard} from "@/game/gameboard/gameboard";
+import {Turn} from "@/components/Turn";
 
 type GameBoardProps = {
-    color: PlayerColor,
+    colorPlayer: PlayerColor,
     colorStart: PlayerColor
 }
 
-export function GameBoard({color, colorStart}: GameBoardProps) {
-    const GameBoard: GameBoard = [
-        Prison.YELLOW, Prison.YELLOW, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, CellEmpty.BLACK, CellEmpty.BLACK, StartingPoint.GREEN, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, Prison.GREEN, Prison.GREEN,
-        Prison.YELLOW, Prison.YELLOW, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, CellEmpty.BLACK, Stable.GREEN, CellEmpty.BLACK, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, Prison.GREEN, Prison.GREEN,
-        CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, CellEmpty.BLACK, Stable.GREEN, CellEmpty.BLACK, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT,
-        CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, CellEmpty.BLACK, Stable.GREEN, CellEmpty.BLACK, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT,
-        StartingPoint.YELLOW, CellEmpty.BLACK, CellEmpty.BLACK, CellEmpty.BLACK, CellEmpty.BLACK, Stable.GREEN, CellEmpty.BLACK, CellEmpty.BLACK, CellEmpty.BLACK, CellEmpty.BLACK, CellEmpty.BLACK,
-        CellEmpty.BLACK, Stable.YELLOW, Stable.YELLOW, Stable.YELLOW, Stable.YELLOW, CellEmpty.TRANSPARENT, Stable.RED, Stable.RED, Stable.RED, Stable.RED, CellEmpty.BLACK,
-        CellEmpty.BLACK, CellEmpty.BLACK, CellEmpty.BLACK, CellEmpty.BLACK, CellEmpty.BLACK, Stable.BLUE, CellEmpty.BLACK, CellEmpty.BLACK, CellEmpty.BLACK, CellEmpty.BLACK, StartingPoint.RED,
-        CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, CellEmpty.BLACK, Stable.BLUE, CellEmpty.BLACK, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT,
-        CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, CellEmpty.BLACK, Stable.BLUE, CellEmpty.BLACK, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT,
-        Prison.BLUE, Prison.BLUE, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, CellEmpty.BLACK, Stable.BLUE, CellEmpty.BLACK, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, Prison.RED, Prison.RED,
-        Prison.BLUE, Prison.BLUE, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, StartingPoint.BLUE, CellEmpty.BLACK, CellEmpty.BLACK, CellEmpty.TRANSPARENT, CellEmpty.TRANSPARENT, Prison.RED, Prison.RED
-    ]
+export function GameBoard({colorPlayer, colorStart}: GameBoardProps) {
+    const GameBoard: GameBoard = getGameBoard()
     const [diceValue, setDiceValue] = useState(-1);
     const [turn, setTurn] = useState<PlayerColor>(colorStart)
     const [error, setError] = useState<ErrorMessage | null>(null)
@@ -52,9 +40,9 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
         if (preGame) {
             if (value === 6) {
                 setPreGame(false)
-                if (turn === color)
+                if (turn === colorPlayer)
                     setCanRollDice(false)
-                if (turn !== color) {
+                if (turn !== colorPlayer) {
                     if (gameBoardRef.current) {
                         moveForwardPieceBot(gameBoardRef.current as HTMLElement, value, turn, handleSwitchTurn)
                         setDiceValue(-1)
@@ -73,19 +61,19 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
                 }
             }
         } else {
-            if (turn !== color) {
+            if (turn !== colorPlayer) {
                 if (gameBoardRef.current) {
                     moveForwardPieceBot(gameBoardRef.current as HTMLElement, value, turn, handleSwitchTurn)
                     setDiceValue(-1)
                 }
             }
-            if (!isPieceOut(turn) && value === 6 && turn === color)
+            if (!isPieceOut(turn) && value === 6 && turn === colorPlayer)
                 setCanRollDice(false)
             if (gameBoardRef.current && switchPlayer(gameBoardRef.current as HTMLElement, turn, value)) {
                 handleSwitchTurn()
                 setDiceValue(-1)
             } else {
-                if (turn === color)
+                if (turn === colorPlayer)
                     setCanRollDice(false)
             }
         }
@@ -102,20 +90,21 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
     useEffect(() => {
 
         const gameBoard = gameBoardRef.current as HTMLElement | null;
-        if (color === colorStart)
-            addOpacity(gameBoard as HTMLElement, colorStart as PlayerColor)
+        /**if (color === colorStart)
+            //addOpacity(gameBoard as HTMLElement, colorStart as PlayerColor)
         if (turn === color)
-            addOpacity(gameBoard as HTMLElement, turn as PlayerColor)
+            //addOpacity(gameBoard as HTMLElement, turn as PlayerColor)
         else {
-            removeOpacity(gameBoard as HTMLElement)
-        }
+            //removeOpacity(gameBoard as HTMLElement)
+        }**/
 
         const handleClick: EventListenerObject = {
             handleEvent(event: MouseEvent) {
                 const piece = event.target as HTMLElement;
                 const indexPlayerColor = parseInt(piece.id.split("-")[2])
-                if (piece.classList.contains(turn) && diceValue !== -1) {
-                    if (moveForwardPiece(gameBoard as HTMLElement, diceValue, indexPlayerColor, turn as PlayerColor, handleSwitchTurn, handleError, error, color) !== -1) {
+                const colorPlayerColor = piece.id.split("-")[1]
+                if (colorPlayerColor === turn && diceValue !== -1) {
+                    if (moveForwardPiece(gameBoard as HTMLElement, diceValue, indexPlayerColor, turn as PlayerColor, handleSwitchTurn, handleError, error, colorPlayer) !== -1) {
                         setCanRollDice(true)
                         setDiceValue(-1)
                     }
@@ -123,7 +112,7 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
             }
         };
 
-        if (turn === color) {
+        if (turn === colorPlayer) {
             setBotRollDice(false)
             playerColors[turn].listDomPieces.forEach((piece) => {
                 if (piece)
@@ -134,7 +123,7 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
         }
 
         return () => {
-            if (turn === color) {
+            if (turn === colorPlayer) {
                 playerColors[turn].listDomPieces.forEach((piece) => {
                     if (piece)
                         piece.removeEventListener('click', handleClick);
@@ -146,7 +135,7 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
     return (
         <>
             <p className="flex mb-2">
-                {color === turn ? (
+                {colorPlayer === turn ? (
                     <span>C&lsquo;est à votre tour de jouer</span>
                 ) : (
                     <span className="flex">
@@ -160,13 +149,15 @@ export function GameBoard({color, colorStart}: GameBoardProps) {
 
             </p>
             {error ? <p className="mb-2">{error}</p> : ""}
-            <div className="gameBoard" ref={gameBoardRef}>
-                <div className="gameBoard-grid">
-                    {GameBoard.map((color, index) => <Cell color={color} id={`${index}`} key={`${index}`}
-                                                           pushListDomPieces={pushListDomPieces}/>)}
+            <div className="game">
+                <div className="gameBoard" ref={gameBoardRef}>
+                    <div className="gameBoard-grid">
+                        {GameBoard.map((color, index) => <Cell color={color} id={`${index}`} key={`${index}`}
+                                                               pushListDomPieces={pushListDomPieces} colorPlayer={colorPlayer}/>)}
+                    </div>
                 </div>
+                <Turn colorStart={colorStart} colorPlayer={colorPlayer} onDiceRoll={handleDiceRoll} canRoll={canRollDice} handleError={handleError} botRollDice={botRollDice} playerColor={turn} mainColor={colorPlayer} disabled={colorPlayer !== turn}/>
             </div>
-            <Dice onDiceRoll={handleDiceRoll} canRoll={canRollDice} handleError={handleError} botRollDice={botRollDice} playerColor={turn} mainColor={color} disabled={color !== turn}/>
         </>
     )
 }

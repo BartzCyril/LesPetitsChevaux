@@ -1,13 +1,16 @@
+import {CSSProperties} from "react";
+
 type Button = {
     handleStart: () => void,
     buttonText: string;
+    style
 }
 
-export function Button({handleStart, buttonText}: Button) {
+export function Button({handleStart, buttonText, style}: Button) {
 
     return (
-        <div>
-            <button className="text-center bg-slate-800 p-3 text-white font-bold rounded-md" onClick={handleStart}>
+        <div style={style.div}>
+            <button style={style.button} onClick={handleStart}>
                 {buttonText}
             </button>
         </div>

@@ -7,11 +7,9 @@ export default function RootLayout({
 }) {
     const header = (
         <header>
-            <div className="text-center bg-slate-800 p-8 my-6 rounded-md">
-                <Link href="https://bartzcyril.github.io/LesPetitsChevaux/">
-                    <h1 className="text-2xl text-white font-bold">Les petits chevaux</h1>
-                </Link>
-            </div>
+            <h1 className="mb-4 text-2xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl dark:text-white">Play now <mark
+                className="px-2 text-white rounded dark:bg-blue-500">Ludo</mark> for free !
+            </h1>
         </header>
     );
 
@@ -25,12 +23,12 @@ export default function RootLayout({
 
     return (
         <html lang="fr">
-        <title>Les petits chevaux</title>
+        <title>Play now Ludo online, it's free !</title>
         <meta content="width=device-width, initial-scale=1" name="viewport"/>
         <meta name="description" content="Plongez dans l'univers du jeu des petits chevaux, un classique indémodable ! Notre site offre une expérience captivante de ce jeu de société populaire en version solo contre des bots intelligents. Lancez les dés, déplacez vos pions et stratégisez pour remplir votre écurie le plus rapidement possible. Profitez de graphismes attrayants, de règles fidèles au jeu original et d'une jouabilité immersive. Rejoignez-nous dès maintenant pour vivre des moments de divertissement en solo avec le jeu des petits chevaux."/>
         <link rel="icon" href="/favicon.ico"/>
         <body>
-        <div className="mx-auto  max-w-2xl px-6">
+        <div className="div-main">
             {header}
             {children}
             {footer}

@@ -9,9 +9,9 @@ type ColorButtonProps = {
 export function ColorButton({color, handleColor}: ColorButtonProps) {
     if (handleColor)
         return (
-            <button className={`${color} h-6 w-6 rounded-full`} onClick={() => handleColor ? handleColor(color) : ""}></button>
+            <button className={`${color} h-6 w-6`} onClick={() => handleColor ? handleColor(color) : ""}></button>
         )
     return (
-        <button className={`${color} h-6 w-6 rounded-full ml-1 mr-1`}></button>
+        <button className={`${color} h-6 w-6 ml-1 mr-1`}></button>
     )
 }

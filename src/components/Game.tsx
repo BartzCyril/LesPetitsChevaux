@@ -6,6 +6,24 @@ import {ColorSelector} from "@/components/ColorSelector";
 import {PlayerSelector} from "@/components/PlayerSelector";
 import {PlayerColor} from "@/type/PlayerColor";
 import {Button} from "@/components/Button";
+import {PreGameBoard} from "@/components/PreGameBoard";
+
+const style = {
+    div : {
+        display: 'flex',
+        justifyContent : 'center',
+        width: '30%',
+        margin: '25px 0'
+    },
+    button: {
+        backgroundColor: '#5151e6',
+        padding: '10px',
+        color: 'white',
+        fontWeight : 'bold',
+        borderRadius: '10px',
+        width : '50%'
+    }
+}
 
 export function Game() {
     const [startThePreGame, setStartThePreGame] = useState<boolean>(false)
@@ -29,21 +47,28 @@ export function Game() {
     
    if (!startThePreGame) {
         return (
-            <div className="flex justify-center">
-                <Button handleStart={handleStartThePreGame} buttonText={"Jouer"}/>
+            <div className="startThePreGame">
+                <PreGameBoard isPlay={false} handleStart={handleStartThePreGame}/>
+                <Button handleStart={handleStartThePreGame} buttonText={"Play"} style={style}/>
             </div>
         )
     } else if (startThePreGame && !color) {
         return (
-            <ColorSelector handleColor={handleColor}/>
+            <div className="startThePreGame">
+                <PreGameBoard isPlay={true}/>
+                <ColorSelector handleColor={handleColor}/>
+            </div>
         )
     } else if (color && !startTheGame) {
         return (
-            <PlayerSelector handleStartGame={handleStartTheGame} color={color} handleColorStart={handleColorStart}/>
+            <div className="startTheGame">
+                <PreGameBoard isPlay={true} colorPlayer={color}/>
+                <PlayerSelector/>
+            </div>
         )
     } else {
         return (
-            <GameBoard color={color as PlayerColor} colorStart={colorStart as PlayerColor}/>
+            <GameBoard colorStart={colorStart as PlayerColor} colorPlayer={color as PlayerColor}/>
         )
     }
 }
