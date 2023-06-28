@@ -53,6 +53,8 @@ header mark {
     display: flex;
     max-width: 1024px;
     margin: 0 auto;
+    align-items: center;
+    gap: 15px;
 }
 
 .container {
@@ -307,6 +309,15 @@ header mark {
     }
     .game {
         flex-direction: column;
+    }
+}
+
+@media only screen and (max-width: 1080px) {
+    .startTheGame {
+        flex-direction: column;
+    }
+    .startTheGame .playerSelector {
+        margin-top: 50px;
     }
 }
 

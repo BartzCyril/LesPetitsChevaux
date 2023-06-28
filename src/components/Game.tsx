@@ -63,7 +63,7 @@ export function Game() {
         return (
             <div className="startTheGame">
                 <PreGameBoard isPlay={true} colorPlayer={color}/>
-                <PlayerSelector/>
+                <PlayerSelector playerColor={color} handleColorStart={handleColorStart} handleStartTheGame={handleStartTheGame}/>
             </div>
         )
     } else {

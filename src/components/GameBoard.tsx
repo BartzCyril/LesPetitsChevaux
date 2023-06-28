@@ -132,6 +132,8 @@ export function GameBoard({colorPlayer, colorStart}: GameBoardProps) {
         };
     }, [diceValue, turn, forwardBot]);
 
+    // @ts-ignore
+    // @ts-ignore
     return (
         <>
             <p className="flex mb-2">
