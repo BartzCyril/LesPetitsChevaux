@@ -26,7 +26,7 @@ export function isConflitBetweenDifferentColor(playerColors: PlayerColors, gameB
     if (cell && cell.childNodes[0]) {
         if (!isConflictBetweenSameColor(turn, gameBoard, indexPath, handleError)) {
             const piece = cell.childNodes[0] as HTMLElement
-            const pieceColor = piece.classList[0] as PlayerColor
+            const pieceColor = piece.id.split("-")[1] as PlayerColor
             const indexPiece = parseInt(piece.id.split("-")[2])
             const piecePlayerColor = playerColors[pieceColor].pieces[indexPiece]
             const elementPrison = gameBoard.querySelector(`#cell-${piecePlayerColor.indexPrison}`)
