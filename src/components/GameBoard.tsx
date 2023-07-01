@@ -17,6 +17,7 @@ import {
 import {moveForwardPieceBot} from "@/game/bot/functions";
 import {getGameBoard} from "@/game/gameboard/gameboard";
 import {Turn} from "@/components/Turn";
+import {addOpacity, removeOpacity} from "@/game/ui/opacity";
 
 type GameBoardProps = {
     colorPlayer: PlayerColor,
@@ -90,12 +91,12 @@ export function GameBoard({colorPlayer, colorStart}: GameBoardProps) {
     useEffect(() => {
 
         const gameBoard = gameBoardRef.current as HTMLElement | null;
-        /**if (color === colorStart)
-            //addOpacity(gameBoard as HTMLElement, colorStart as PlayerColor)
-        if (turn === color)
-            //addOpacity(gameBoard as HTMLElement, turn as PlayerColor)
+        /**if (colorPlayer === colorStart)
+            addOpacity(gameBoard as HTMLElement, colorStart as PlayerColor)
+        if (turn === colorPlayer)
+            addOpacity(gameBoard as HTMLElement, turn as PlayerColor)
         else {
-            //removeOpacity(gameBoard as HTMLElement)
+            removeOpacity(gameBoard as HTMLElement)
         }**/
 
         const handleClick: EventListenerObject = {
@@ -132,8 +133,6 @@ export function GameBoard({colorPlayer, colorStart}: GameBoardProps) {
         };
     }, [diceValue, turn, forwardBot]);
 
-    // @ts-ignore
-    // @ts-ignore
     return (
         <>
             <p className="flex mb-2">
@@ -158,7 +157,7 @@ export function GameBoard({colorPlayer, colorStart}: GameBoardProps) {
                                                                pushListDomPieces={pushListDomPieces} colorPlayer={colorPlayer}/>)}
                     </div>
                 </div>
-                <Turn colorStart={colorStart} colorPlayer={colorPlayer} onDiceRoll={handleDiceRoll} canRoll={canRollDice} handleError={handleError} botRollDice={botRollDice} playerColor={turn} mainColor={colorPlayer} disabled={colorPlayer !== turn}/>
+                <Turn colorStart={colorStart} colorPlayer={colorPlayer} onDiceRoll={handleDiceRoll} canRoll={canRollDice} handleError={handleError} botRollDice={botRollDice} playerColor={turn} mainColor={colorPlayer}/>
             </div>
         </>
     )

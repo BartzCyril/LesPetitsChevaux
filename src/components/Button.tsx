@@ -3,7 +3,10 @@ import {CSSProperties} from "react";
 type Button = {
     handleStart: () => void,
     buttonText: string;
-    style
+    style: {
+        div: CSSProperties,
+        button: CSSProperties
+    };
 }
 
 export function Button({handleStart, buttonText, style}: Button) {

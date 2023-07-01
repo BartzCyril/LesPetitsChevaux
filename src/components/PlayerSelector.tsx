@@ -73,7 +73,6 @@ export function PlayerSelector({playerColor, handleColorStart, handleStartTheGam
 
     return (
         <div className="playerSelector">
-            <h2>Tournez la roue pour déterminer le joueur qui commencera la partie</h2>
             <div className="container">
                 <div className="spin">Spin</div>
                 <div className="wheel">

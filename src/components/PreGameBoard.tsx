@@ -1,9 +1,10 @@
 import {GameBoard, CellState} from "@/type/GameBoard";
 import {getGameBoard} from "@/game/gameboard/gameboard";
 import {PlayerColor} from "@/type/PlayerColor";
+import Image from "next/image";
 
 type CellProps = {
-    color: CellState;
+    color: CellState | PlayerColor;
     id: string;
     isPlay?: boolean;
     colorPlayer?: PlayerColor
@@ -24,8 +25,10 @@ function Cell({color, id, isPlay, colorPlayer}: CellProps) {
     ) {
         if (colorPlayer !== undefined) {
             return <div className={`${color} pieceGame`} id={`cell-${id}`}>
-                {color === colorPlayer ? <img src={`./img/person-${color}.svg`} alt="your player"/> :
-                    <img src={`./img/robot-${color}.svg`} alt="robot player"/>}
+                {color === colorPlayer ? <Image width={0}
+  height={0} src={`./img/person-${color}.svg`} alt="your player"/> :
+                    <Image width={0}
+                    height={0} src={`./img/robot-${color}.svg`} alt="robot player"/>}
             </div>;
         } else {
             return <div className={`${color} pieceGame`} id={`cell-${id}`}></div>
@@ -46,7 +49,8 @@ function Cell({color, id, isPlay, colorPlayer}: CellProps) {
     )
         return <div
             className="btn-play">
-            <img src="./img/play.svg" alt="play"/>
+            <Image width={100}
+  height={100} src="./img/play.svg" alt="play"/>
         </div>
     else if (color === "transparent")
         return <div className={`${color}`} id={`cell-${id}`}></div>;
