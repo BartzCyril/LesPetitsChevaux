@@ -20,11 +20,14 @@ function PieceGame({color, id, colorPlayer}: PieceProps, ref: Ref<HTMLImageEleme
     else
         index = 3
 
-    return (
-        <Image width={0}
-        height={0} src={color === colorPlayer ? `./img/person-${color}.svg` : `./img/robot-${color}.svg`} className={`piece`} id={`piece-${color}-${index}`} ref={ref} alt="piece game"/>
-        
-    )
+    if (color === colorPlayer) {
+        return <Image width={0}
+        height={0} src={`./img/person-${color}.svg`} className={`piece`} id={`piece-${color}-${index}`} ref={ref} alt="piece game"/>
+    } 
+
+    return <Image width={0}
+    height={0} src={`./img/robot-${color}.svg`} id={`piece-${color}-${index}`} ref={ref} alt="piece game"/>
+    
 }
 
 export default forwardRef(PieceGame)
