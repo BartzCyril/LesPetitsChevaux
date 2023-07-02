@@ -409,9 +409,6 @@ header mark {
         flex-direction: column;
         gap: 30px;
     }
-    .gameBoard {
-        margin-right: 0;
-    }
     .turn {
         flex-direction: row;
     }

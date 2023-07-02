@@ -20,7 +20,7 @@ const style = {
         color: 'white',
         fontWeight : 'bold',
         borderRadius: '10px',
-        width : '50%'
+        width : '142px'
     }
 }
 
