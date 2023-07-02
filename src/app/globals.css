@@ -20,8 +20,13 @@ ul {
     list-style: disc;
 }
 
+.text-sm {
+    color: black;
+}
+
 .prose p {
     margin-bottom: 10px;
+    color: black;
 }
 
 .pointer {
