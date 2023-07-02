@@ -2,7 +2,6 @@ import { PlayerColor } from "@/type/PlayerColor";
 import { ErrorMessage } from "@/type/ErrorMessage";
 import { Dice } from "@/components/Dice";
 import Image from "next/image";
-import {useEffect} from "react";
 
 type TurnProps = {
     colorStart: PlayerColor,

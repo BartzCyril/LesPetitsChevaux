@@ -24,9 +24,23 @@ ul {
     color: black;
 }
 
+.prose {
+    padding: 0 15px 15px 15px;
+}
+
 .prose p {
-    margin-bottom: 10px;
-    color: black;
+    margin-bottom: 0.75rem;
+    color: #6B7280;
+}
+
+.prose ul {
+    color: #6B7280;
+    max-width: 768px;
+    margin: 0 auto;
+}
+
+.prose ul li {
+    margin-bottom: 15px
 }
 
 .pointer {
@@ -38,7 +52,7 @@ ul {
 }
 
 header {
-    padding: 25px 0;
+    padding: 2rem 0;
     font-size: 30px;
     font-weight: bold;
 }

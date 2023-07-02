@@ -4,7 +4,6 @@ import {PlayerColor} from "@/type/PlayerColor";
 import Image from "next/image";
 import {useToasts} from "@/components/ToastContext";
 import {useEffect} from "react";
-import {id} from "postcss-selector-parser";
 
 type CellProps = {
     color: CellState | PlayerColor;

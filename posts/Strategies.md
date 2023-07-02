@@ -1,7 +1,6 @@
 ---
 title: Stratégies du jeu
 subtitle: "Sortir rapidement les pions du couloir de départ : Concentrez-vous sur la sortie de vos pions du couloir de départ dès que possible..."
-date: "2023-05-08"
 ---
 
 - Sortir rapidement les pions du couloir de départ : Concentrez-vous sur la sortie de vos pions du couloir de départ dès que possible.

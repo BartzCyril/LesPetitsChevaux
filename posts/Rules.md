@@ -1,7 +1,6 @@
 ---
 title: Règles du jeu
 subtitle: "Chaque joueur lance le dé une fois et le joueur qui obtient le plus grand nombre commence la partie..."
-date: "2023-05-08"
 ---
 
 - Chaque joueur lance le dé une fois et le joueur qui obtient le plus grand nombre commence la partie. Si plusieurs joueurs obtiennent le même plus grand nombre, ils relancent le dé jusqu'à ce qu'un joueur obtienne le plus grand nombre.

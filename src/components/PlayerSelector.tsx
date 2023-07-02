@@ -1,7 +1,7 @@
 'use client'
 
 
-import {CSSProperties, SetStateAction, useEffect, useRef, useState} from "react";
+import {CSSProperties, useEffect, useState} from "react";
 import {PlayerColor} from "@/type/PlayerColor";
 import {useToasts} from "@/components/ToastContext";
 
@@ -87,7 +87,7 @@ export function PlayerSelector({playerColor, handleColorStart, handleStartTheGam
     return (
         <div className="playerSelector">
             <div className="container">
-                <div className="spin">Spin</div>
+                <div className="spin">Roue</div>
                 <div className="wheel">
                     {colors.map((color, index) => (
                         <div

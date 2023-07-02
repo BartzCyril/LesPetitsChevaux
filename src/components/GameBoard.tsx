@@ -4,7 +4,6 @@ import {GameBoard} from "@/type/GameBoard";
 import {Cell} from "@/components/Cell";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {PlayerColor} from "@/type/PlayerColor";
-import {ColorButton} from "@/components/ColorButton";
 import {ErrorMessage} from "@/type/ErrorMessage";
 import {
     isPieceOut,
@@ -17,7 +16,6 @@ import {
 import {moveForwardPieceBot} from "@/game/bot/functions";
 import {getGameBoard} from "@/game/gameboard/gameboard";
 import {Turn} from "@/components/Turn";
-import {addOpacity, removeOpacity} from "@/game/ui/opacity";
 import {useToasts} from "@/components/ToastContext";
 
 type GameBoardProps = {
@@ -104,13 +102,6 @@ export function GameBoard({colorPlayer, colorStart}: GameBoardProps) {
     useEffect(() => {
 
         const gameBoard = gameBoardRef.current as HTMLElement | null;
-        /**if (colorPlayer === colorStart)
-            addOpacity(gameBoard as HTMLElement, colorStart as PlayerColor)
-        if (turn === colorPlayer)
-            addOpacity(gameBoard as HTMLElement, turn as PlayerColor)
-        else {
-            removeOpacity(gameBoard as HTMLElement)
-        }**/
 
         const handleClick: EventListenerObject = {
             handleEvent(event: MouseEvent) {

@@ -1,7 +1,6 @@
 ---
 title: Histoire du jeu
 subtitle: "Le jeu des Petits Chevaux est un jeu de société populaire qui trouve ses origines dans l'ancienne Inde..."
-date: "2023-05-08"
 ---
 
 Le jeu des Petits Chevaux est un jeu de société populaire qui trouve ses origines dans l'ancienne Inde. Connu sous le nom de "Pachisi", il a été joué pour la première fois il y a plus de 1 500 ans. Le terme "Pachisi" signifie littéralement "vingt-cinq" en hindi, faisant référence au nombre maximal de pions utilisés dans le jeu.

@@ -2,12 +2,10 @@
 
 import {useState} from "react";
 import {GameBoard} from "@/components/GameBoard";
-import {ColorSelector} from "@/components/ColorSelector";
 import {PlayerSelector} from "@/components/PlayerSelector";
 import {PlayerColor} from "@/type/PlayerColor";
 import {Button} from "@/components/Button";
 import {PreGameBoard} from "@/components/PreGameBoard";
-import {useToasts} from "@/components/ToastContext";
 
 const style = {
     div : {
@@ -31,7 +29,6 @@ export function Game() {
     const [color, setColor] = useState<PlayerColor | null>(null)
     const [startTheGame, setStartTheGame] = useState<boolean>(false)
     const [colorStart, setColorStart] = useState<PlayerColor | null>(null)
-    const {pushToast} = useToasts();
     const handleColor = (color: PlayerColor) => {
         setColor(color)
     }
@@ -51,7 +48,7 @@ export function Game() {
         return (
             <div className="startThePreGame">
                 <PreGameBoard isPlay={false} handleStart={handleStartThePreGame}/>
-                <Button handleStart={handleStartThePreGame} buttonText={"Play"} style={style}/>
+                <Button handleStart={handleStartThePreGame} buttonText={"Jouer"} style={style}/>
             </div>
         )
     } else if (startThePreGame && !color) {
