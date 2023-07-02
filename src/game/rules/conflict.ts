@@ -10,7 +10,7 @@ export function isConflictBetweenSameColor(turn: PlayerColor, gameBoard: HTMLEle
     }
     if (cell && cell.childNodes[0]) {
         const piece = cell.childNodes[0] as HTMLElement
-        const pieceColor = piece.classList[0] as PlayerColor
+        const pieceColor = piece.id.split("-")[1] as PlayerColor
         if (turn === pieceColor) {
             if (handleError) {
                 handleError(ErrorMessage.MOVE_PIECE_FIRST)

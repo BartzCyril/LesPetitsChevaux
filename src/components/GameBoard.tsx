@@ -18,6 +18,7 @@ import {moveForwardPieceBot} from "@/game/bot/functions";
 import {getGameBoard} from "@/game/gameboard/gameboard";
 import {Turn} from "@/components/Turn";
 import {addOpacity, removeOpacity} from "@/game/ui/opacity";
+import {useToasts} from "@/components/ToastContext";
 
 type GameBoardProps = {
     colorPlayer: PlayerColor,
@@ -35,6 +36,7 @@ export function GameBoard({colorPlayer, colorStart}: GameBoardProps) {
     const [canRollDice, setCanRollDice] = useState(true)
     const [botRollDice, setBotRollDice] = useState(false)
     const [forwardBot, setForwardBot] = useState(0)
+    const {pushToast} = useToasts();
     const handleDiceRoll = (value: number) => {
         setForwardBot(c => c + 1)
         setDiceValue(value)
@@ -89,6 +91,17 @@ export function GameBoard({colorPlayer, colorStart}: GameBoardProps) {
     }
 
     useEffect(() => {
+        if (error !== null)
+            pushToast({title: "Attention", content : error as string, duration : 5, type : "danger"})
+    }, [error, pushToast])
+
+    useEffect(() => {
+        if (turn === colorPlayer) {
+            pushToast({title: "Super", content : "C'est à vous de jouer, cliquez sur le dé pour pourvoir avancer !", duration : 5, type : "success"})
+        }
+    }, [turn, colorPlayer])
+
+    useEffect(() => {
 
         const gameBoard = gameBoardRef.current as HTMLElement | null;
         /**if (colorPlayer === colorStart)
@@ -135,21 +148,6 @@ export function GameBoard({colorPlayer, colorStart}: GameBoardProps) {
 
     return (
         <>
-            <p className="flex mb-2">
-                {colorPlayer === turn ? (
-                    <span>C&lsquo;est à votre tour de jouer</span>
-                ) : (
-                    <span className="flex">
-    C&lsquo;est au tour du joueur {turn === colorStart ? (
-                        <ColorButton color={colorStart} />
-                    ) : (
-                        <ColorButton color={turn as PlayerColor} />
-                    )} de jouer
-  </span>
-                )}
-
-            </p>
-            {error ? <p className="mb-2">{error}</p> : ""}
             <div className="game">
                 <div className="gameBoard" ref={gameBoardRef}>
                     <div className="gameBoard-grid">

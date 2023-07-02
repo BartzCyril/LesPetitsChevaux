@@ -9,10 +9,10 @@ export function addOpacity(gameBoard: HTMLElement, turn: PlayerColor) {
             const child = pieceGame.childNodes[0] as HTMLElement
             const childColor = child.id.split("-")[1]
             if (childColor !== turn) {
-                pieceGame.style.opacity = "0.6"
+                pieceGame.style.transform = "scale(1)"
+            } else {
+                pieceGame.style.transform = "scale(1.2)"
             }
-        } else {
-            pieceGame.style.opacity = "0.3"
         }
     }
 }

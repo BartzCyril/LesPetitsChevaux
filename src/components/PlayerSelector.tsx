@@ -3,6 +3,7 @@
 
 import {CSSProperties, SetStateAction, useEffect, useRef, useState} from "react";
 import {PlayerColor} from "@/type/PlayerColor";
+import {useToasts} from "@/components/ToastContext";
 
 type PlayerSelectorProps = {
     playerColor: PlayerColor,
@@ -40,6 +41,8 @@ function getPlayerWinner(value: number, colors: any, playerColor: PlayerColor) {
 
 export function PlayerSelector({playerColor, handleColorStart, handleStartTheGame}: PlayerSelectorProps) {
 
+    const [isWheelClick, setIsWheelClick] = useState(false)
+    const {pushToast} = useToasts();
     const colors = [
         {'--i': 1, '--clr': '#BCF4F5'},
         {'--i': 2, '--clr': '#FFB7C3'},
@@ -52,23 +55,33 @@ export function PlayerSelector({playerColor, handleColorStart, handleStartTheGam
     ];
 
     useEffect(() => {
+        if (!isWheelClick)
+            pushToast({ title: "Joueur qui commence la partie", content: "Pour déterminer le joueur qui commence la partie, cliquez sur la roue !", duration: 5,});
+
+        const idInterval = setInterval(() => {
+            if (!isWheelClick)
+                pushToast({ title: "Joueur qui commence la partie", content: "Pour déterminer le joueur qui commence la partie, cliquez sur la roue !", duration: 5,});
+        }, 8000)
 
         const wheel = document.querySelector('.wheel') as HTMLElement
         document.querySelector('.spin')!.addEventListener('click', () => {
+            setIsWheelClick(true)
             let value = Math.ceil(Math.random() * 3600)
             wheel.style.transform = `rotate(${value}deg)`
             const playerWin = getPlayerWinner(value, colors, playerColor)
             setTimeout(() => {
                 handleColorStart(playerWin)
                 handleStartTheGame()
-            }, 6000)
+            }, 8000)
 
         })
 
         return () => {
-
+            if (!isWheelClick) {
+                clearInterval(idInterval)
+            }
         };
-    }, [])
+    }, [colors, handleColorStart, handleStartTheGame, isWheelClick, playerColor, pushToast])
 
 
     return (

@@ -7,6 +7,7 @@ import {PlayerSelector} from "@/components/PlayerSelector";
 import {PlayerColor} from "@/type/PlayerColor";
 import {Button} from "@/components/Button";
 import {PreGameBoard} from "@/components/PreGameBoard";
+import {useToasts} from "@/components/ToastContext";
 
 const style = {
     div : {
@@ -30,6 +31,7 @@ export function Game() {
     const [color, setColor] = useState<PlayerColor | null>(null)
     const [startTheGame, setStartTheGame] = useState<boolean>(false)
     const [colorStart, setColorStart] = useState<PlayerColor | null>(null)
+    const {pushToast} = useToasts();
     const handleColor = (color: PlayerColor) => {
         setColor(color)
     }
@@ -55,14 +57,13 @@ export function Game() {
     } else if (startThePreGame && !color) {
         return (
             <div className="startThePreGame">
-                <PreGameBoard isPlay={true}/>
-                <ColorSelector handleColor={handleColor}/>
+                <PreGameBoard isPlay={true} handleColor={handleColor}/>
             </div>
         )
     } else if (color && !startTheGame) {
         return (
             <div className="startTheGame">
-                <PreGameBoard isPlay={true} colorPlayer={color}/>
+                <PreGameBoard isPlay={true} colorPlayer={color} isPlayerSelector={true}/>
                 <PlayerSelector playerColor={color} handleColorStart={handleColorStart} handleStartTheGame={handleStartTheGame}/>
             </div>
         )

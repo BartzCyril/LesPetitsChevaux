@@ -1,12 +1,15 @@
 import BlogPage from "@/app/blog";
 import {Game} from "@/components/Game";
+import {ToastContextProvider} from "@/components/ToastContext";
 
 function Page() {
 
     return (
         <>
-            <Game/>
-            <BlogPage/>
+            <ToastContextProvider>
+                <Game/>
+            </ToastContextProvider>
+                <BlogPage/>
         </>
     )
 }

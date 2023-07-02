@@ -6,10 +6,13 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     const header = (
+
         <header>
+            <Link href="https://www.gameludo.app/">
             <h1 className="mb-4 text-2xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl dark:text-white">Play now <mark
                 className="px-2 text-white rounded dark:bg-blue-500">Ludo</mark> for free !
             </h1>
+            </Link>
         </header>
     );
 

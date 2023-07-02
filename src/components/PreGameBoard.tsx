@@ -2,21 +2,27 @@ import {GameBoard, CellState} from "@/type/GameBoard";
 import {getGameBoard} from "@/game/gameboard/gameboard";
 import {PlayerColor} from "@/type/PlayerColor";
 import Image from "next/image";
+import {useToasts} from "@/components/ToastContext";
+import {useEffect} from "react";
+import {id} from "postcss-selector-parser";
 
 type CellProps = {
     color: CellState | PlayerColor;
     id: string;
     isPlay?: boolean;
     colorPlayer?: PlayerColor
+    handleColor?: (color: PlayerColor) => void;
 };
 
 type PreGameBoard = {
     isPlay?: boolean;
     colorPlayer?: PlayerColor,
     handleStart?: () => void,
+    handleColor?: (color: PlayerColor) => void;
+    isPlayerSelector?: boolean
 }
 
-function Cell({color, id, isPlay, colorPlayer}: CellProps) {
+function Cell({color, id, isPlay, colorPlayer, handleColor}: CellProps) {
     if (
         id === '0' || id === '1' || id === '11' || id === '12' ||
         id === '108' || id === '109' || id === '119' || id === '120' ||
@@ -31,7 +37,7 @@ function Cell({color, id, isPlay, colorPlayer}: CellProps) {
                     height={0} src={`./img/robot-${color}.svg`} alt="robot player"/>}
             </div>;
         } else {
-            return <div className={`${color} pieceGame`} id={`cell-${id}`}></div>
+            return <div className={`${color} pieceGame ${handleColor ? 'pointer' : ''}`} id={`cell-${id}`} onClick={() => handleColor ? handleColor(color as PlayerColor) : ""}></div>
         }
     } else if (
         id === '16' || id === '27' || id === '38' || id === '49' ||
@@ -39,11 +45,11 @@ function Cell({color, id, isPlay, colorPlayer}: CellProps) {
         id === '104' || id === '93' || id === '82' || id === '71' ||
         id === '56' || id === '57' || id === '58' || id === '59'
     )
-        return <div className={`${color} pieceGame`} id={`cell-${id}`}></div>;
+        return <div className={`${color} pieceGame ${handleColor ? 'pointer' : ''}`} id={`cell-${id}`} onClick={() => handleColor ? handleColor(color as PlayerColor) : ""}></div>;
     else if (
         id === "6" || id === "44" || id === "76" || id === "114"
     )
-        return <div className={`border-${color} cell-start`} id={`cell-${id}`}></div>;
+        return <div className={`border-${color} cell-start ${handleColor ? 'pointer' : ''}`} id={`cell-${id}`} onClick={() => handleColor ? handleColor(color as PlayerColor) : ""}></div>;
     else if (
         !isPlay && id === '60'
     )
@@ -58,8 +64,25 @@ function Cell({color, id, isPlay, colorPlayer}: CellProps) {
         return <div className={`pieceGame`} id={`cell-${id}`}></div>;
 }
 
-export function PreGameBoard({isPlay, colorPlayer, handleStart}: PreGameBoard) {
+export function PreGameBoard({isPlay, colorPlayer, handleStart, handleColor, isPlayerSelector}: PreGameBoard) {
     const GameBoard: GameBoard = getGameBoard()
+    const {pushToast} = useToasts();
+
+    useEffect(() => {
+        if (!isPlayerSelector && isPlay)
+            pushToast({ title: "Choisissez votre couleur", content: "Cliquez sur une case de couleur pour choisir votre couleur !", duration: 5,});
+        const intervalId = setInterval(() => {
+            if (!isPlayerSelector && isPlay)
+                pushToast({ title: "Choisissez votre couleur", content: "Cliquez sur une case de couleur pour choisir votre couleur !", duration: 5,});
+        }, 8000);
+
+        return () => {
+            if (isPlay && !isPlayerSelector) {
+                clearInterval(intervalId);
+            }
+        };
+    }, [isPlay, isPlayerSelector, pushToast]);
+
     if (!isPlay) {
         return (
             <button className="gameBoard preGameBoard" onClick={handleStart}>
@@ -74,7 +97,7 @@ export function PreGameBoard({isPlay, colorPlayer, handleStart}: PreGameBoard) {
         <div className="gameBoard preGameBoard">
             <div className="gameBoard-grid">
                 {GameBoard.map((color, index) => <Cell color={color} id={`${index}`} key={`${index}`} isPlay={isPlay}
-                                                       colorPlayer={colorPlayer}/>)}
+                                                       colorPlayer={colorPlayer} handleColor={handleColor}/>)}
             </div>
         </div>
     )

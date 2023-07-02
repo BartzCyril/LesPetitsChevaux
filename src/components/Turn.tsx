@@ -2,6 +2,7 @@ import { PlayerColor } from "@/type/PlayerColor";
 import { ErrorMessage } from "@/type/ErrorMessage";
 import { Dice } from "@/components/Dice";
 import Image from "next/image";
+import {useEffect} from "react";
 
 type TurnProps = {
     colorStart: PlayerColor,
@@ -12,6 +13,7 @@ type TurnProps = {
     botRollDice: boolean,
     playerColor?: PlayerColor,
     mainColor?: PlayerColor,
+    prePlayerColor?: PlayerColor,
 }
 
 function getIndexColor(array: PlayerColor[], colorStart: PlayerColor): number {
@@ -22,7 +24,7 @@ function getIndexColor(array: PlayerColor[], colorStart: PlayerColor): number {
     return -1
 }
 
-export function Turn({ colorStart, colorPlayer, onDiceRoll, canRoll, handleError, botRollDice, mainColor, playerColor }: TurnProps) {
+export function Turn({ colorStart, colorPlayer, onDiceRoll, canRoll, handleError, botRollDice, mainColor, playerColor}: TurnProps) {
 
     const colors = [PlayerColor.YELLOW, PlayerColor.GREEN, PlayerColor.RED, PlayerColor.BLUE];
 
