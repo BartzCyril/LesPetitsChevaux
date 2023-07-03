@@ -27,8 +27,8 @@ const style = {
 
 export function Game() {
     const [startThePreGame, setStartThePreGame] = useState<boolean>(false)
-    const [color, setColor] = useState<PlayerColor | null>(PlayerColor.BLUE)
-    const [colorWin, setColorWin] = useState<PlayerColor | null>(PlayerColor.BLUE)
+    const [color, setColor] = useState<PlayerColor | null>(null)
+    const [colorWin, setColorWin] = useState<PlayerColor | null>(null)
     const [startTheGame, setStartTheGame] = useState<boolean>(false)
     const [colorStart, setColorStart] = useState<PlayerColor | null>(null)
     const handleColor = (color: PlayerColor) => {
