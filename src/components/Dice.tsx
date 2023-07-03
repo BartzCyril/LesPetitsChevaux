@@ -3,6 +3,7 @@
 import {useCallback, useEffect, useRef} from "react";
 import {ErrorMessage} from "@/type/ErrorMessage";
 import {PlayerColor} from "@/type/PlayerColor";
+import {playerColors, switchPlayer} from "@/game/functions";
 
 type DiceProps = {
     onDiceRoll: (value: number) => void
@@ -11,10 +12,13 @@ type DiceProps = {
     botRollDice: boolean,
     playerColor?: PlayerColor,
     mainColor?: PlayerColor,
-    disabled: boolean
+    disabled: boolean,
+    gameBoard: HTMLElement,
+    count : number,
+    preGame : boolean
 }
 
-export function Dice({onDiceRoll, canRoll, handleError, botRollDice, mainColor, playerColor, disabled}: DiceProps) {
+export function Dice({onDiceRoll, canRoll, handleError, botRollDice, mainColor, playerColor, disabled, gameBoard, preGame, count}: DiceProps) {
     const buttonRef = useRef(null);
     const handleDiceClick = useCallback(() => {
         if (mainColor === playerColor && !canRoll) {
@@ -35,13 +39,30 @@ export function Dice({onDiceRoll, canRoll, handleError, botRollDice, mainColor, 
             setTimeout(() => {
                 // Génération d'un nombre aléatoire entre 1 et 6
                 const randomNumber = Math.floor(Math.random() * 6) + 1;
-                onDiceRoll(randomNumber)
                 // Affichage du nombre de points correspondant
                 for (let i = 0; i < randomNumber; i++) {
                     dots[i].style.display = 'block';
                 }
                 // Suppression de l'animation et réactivation du bouton
                 dice.classList.remove('roll-animation');
+                if (mainColor === playerColor) {
+                    onDiceRoll(randomNumber)
+                }
+                else if (preGame) {
+                    if (count === 3) {
+                        setTimeout(() => {
+                            onDiceRoll(randomNumber)
+                        }, 2000)
+                    } else
+                        onDiceRoll(randomNumber)
+                }
+                else if (switchPlayer(gameBoard, playerColor as PlayerColor, randomNumber) || randomNumber !== 6) {
+                    setTimeout(() => {
+                        onDiceRoll(randomNumber)
+                    }, 2000)
+                } else {
+                    onDiceRoll(randomNumber)
+                }
             }, 1000);
         }
     }, [canRoll, handleError, onDiceRoll])

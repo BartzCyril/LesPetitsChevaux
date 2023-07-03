@@ -24,7 +24,7 @@ function getColor(color: string): PlayerColor {
     }
 }
 
-function getPlayerWinner(value: number, colors: any, playerColor: PlayerColor) {
+function getPlayerWinner(value: number, colors: any) {
     const ratio = (1 / colors.length) / 2
     const elementsWheel = document.querySelectorAll('.wheel div')
     const arrayColor: PlayerColor[] = []
@@ -68,7 +68,7 @@ export function PlayerSelector({playerColor, handleColorStart, handleStartTheGam
             setIsWheelClick(true)
             let value = Math.ceil(Math.random() * 3600)
             wheel.style.transform = `rotate(${value}deg)`
-            const playerWin = getPlayerWinner(value, colors, playerColor)
+            const playerWin = getPlayerWinner(value, colors)
             setTimeout(() => {
                 handleColorStart(playerWin)
                 handleStartTheGame()

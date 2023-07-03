@@ -22,7 +22,7 @@ function PieceGame({color, id, colorPlayer}: PieceProps, ref: Ref<HTMLImageEleme
 
     if (color === colorPlayer) {
         return <Image width={0}
-        height={0} src={`./img/person-${color}.svg`} className={`piece`} id={`piece-${color}-${index}`} ref={ref} alt="piece game"/>
+        height={0} src={`./img/person-${color}.svg`} id={`piece-${color}-${index}`} ref={ref} alt="piece game"/>
     } 
 
     return <Image width={0}

@@ -1,16 +1,17 @@
 'use client'
 
 import {useState} from "react";
-import {GameBoard} from "@/components/GameBoard";
-import {PlayerSelector} from "@/components/PlayerSelector";
 import {PlayerColor} from "@/type/PlayerColor";
 import {Button} from "@/components/Button";
+import Image from "next/image";
 import {PreGameBoard} from "@/components/PreGameBoard";
+import {PlayerSelector} from "@/components/PlayerSelector";
+import {GameBoard} from "@/components/GameBoard";
 
 const style = {
-    div : {
+    div: {
         display: 'flex',
-        justifyContent : 'center',
+        justifyContent: 'center',
         width: '30%',
         margin: '25px 0'
     },
@@ -18,15 +19,16 @@ const style = {
         backgroundColor: '#5151e6',
         padding: '10px',
         color: 'white',
-        fontWeight : 'bold',
+        fontWeight: 'bold',
         borderRadius: '10px',
-        width : '142px'
+        width: '142px'
     }
 }
 
 export function Game() {
     const [startThePreGame, setStartThePreGame] = useState<boolean>(false)
-    const [color, setColor] = useState<PlayerColor | null>(null)
+    const [color, setColor] = useState<PlayerColor | null>(PlayerColor.BLUE)
+    const [colorWin, setColorWin] = useState<PlayerColor | null>(PlayerColor.BLUE)
     const [startTheGame, setStartTheGame] = useState<boolean>(false)
     const [colorStart, setColorStart] = useState<PlayerColor | null>(null)
     const handleColor = (color: PlayerColor) => {
@@ -41,10 +43,22 @@ export function Game() {
     }
 
     const handleStartThePreGame = () => {
-        setStartThePreGame(true)
+        if (startThePreGame) {
+            setStartThePreGame(false)
+            setColor(null)
+            setStartTheGame(false)
+            setColorStart(null)
+            setColorWin(null)
+        } else {
+            setStartThePreGame(true)
+        }
     }
-    
-   if (!startThePreGame) {
+
+    const handleColorWin = (color: PlayerColor) => {
+        setColorWin(color)
+    }
+
+    if (!startThePreGame) {
         return (
             <div className="startThePreGame">
                 <PreGameBoard isPlay={false} handleStart={handleStartThePreGame}/>
@@ -61,12 +75,24 @@ export function Game() {
         return (
             <div className="startTheGame">
                 <PreGameBoard isPlay={true} colorPlayer={color} isPlayerSelector={true}/>
-                <PlayerSelector playerColor={color} handleColorStart={handleColorStart} handleStartTheGame={handleStartTheGame}/>
+                <PlayerSelector playerColor={color} handleColorStart={handleColorStart}
+                                handleStartTheGame={handleStartTheGame}/>
             </div>
         )
+    } else if (colorWin !== null) {
+       return (
+           <div className="win">
+            <div>
+                <p>Bravo !</p>
+                <Image width={50} height={50} src={colorWin === color ? `./img/person-${colorWin}.svg` : `./img/robot-${colorWin}.svg`} alt="player win"/>
+                <p>a gagné la partie</p>
+            </div>
+            <Button handleStart={handleStartThePreGame} buttonText={"Recommencer une partie"} style={style}/>
+        </div>
+       )
     } else {
         return (
-            <GameBoard colorStart={colorStart as PlayerColor} colorPlayer={color as PlayerColor}/>
+            <GameBoard colorStart={colorStart as PlayerColor} colorPlayer={color as PlayerColor} handleColorWin={handleColorWin}/>
         )
     }
 }

@@ -123,7 +123,7 @@ export function updateGameBoard(gameBoard: HTMLElement, pieceIndex: Index, nextI
         nextPosition.appendChild(piece);
 }
 
-export function moveForwardPiece(gameBoard: HTMLElement, diceResult: number, pieceIndex: Index, turn: PlayerColor, handleSwitchTurn: () => void, handleError: (message: ErrorMessage | null) => void, error: ErrorMessage | null, colorPlayer: PlayerColor) {
+export function moveForwardPiece(gameBoard: HTMLElement, diceResult: number, pieceIndex: Index, turn: PlayerColor, handleSwitchTurn: () => void, handleError: (message: ErrorMessage | null) => void, error: ErrorMessage | null, colorPlayer: PlayerColor, handleColorWin: (color: PlayerColor) => void) {
     const playerColor = playerColors[turn]
     if (!playerColor.pieces[pieceIndex].out) {
         if (diceResult === 6) {
@@ -154,7 +154,7 @@ export function moveForwardPiece(gameBoard: HTMLElement, diceResult: number, pie
             updateGameBoard(gameBoard, pieceIndex, playerColor.pathPiece[nextIndexPath], turn)
             handleError(null)
             if (win(playerColors, gameBoard, turn))
-                alert("win !!!!")
+                handleColorWin(turn)
         } else {
             return -1
         }

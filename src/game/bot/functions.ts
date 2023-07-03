@@ -32,7 +32,7 @@ function getPieceOut(gameBoard: HTMLElement, turn: PlayerColor): HTMLElement[] {
     return array
 }
 
-function forwardPiece(playerColor: PlayerColors[PlayerColor], pieceOut: HTMLElement[], diceResult: number, gameBoard: HTMLElement, handleSwitchTurn: () => void, turn: PlayerColor) {
+function forwardPiece(playerColor: PlayerColors[PlayerColor], pieceOut: HTMLElement[], diceResult: number, gameBoard: HTMLElement, handleSwitchTurn: () => void, turn: PlayerColor, handleColorWin: (color: PlayerColor) => void) {
     for (const piece of pieceOut) {
         const index = parseInt(piece.id.split("-")[2])
         const playerColorPiece = playerColor.pieces[index]
@@ -42,7 +42,7 @@ function forwardPiece(playerColor: PlayerColors[PlayerColor], pieceOut: HTMLElem
                 playerColorPiece.indexPath = playerColorPiece.indexPath + diceResult
                 updateGameBoard(gameBoard, index, nextPosition, turn)
                 if (win(playerColors, gameBoard, turn))
-                    alert("win !!!!")
+                    handleColorWin(turn)
                 if (diceResult === 6)
                     return
                 handleSwitchTurn()
@@ -90,7 +90,7 @@ function outPiece(playerColor: PlayerColors[PlayerColor], pieceNotOut: HTMLEleme
     return
 }
 
-export function moveForwardPieceBot(gameBoard: HTMLElement, diceResult: number, turn: PlayerColor, handleSwitchTurn: () => void) {
+export function moveForwardPieceBot(gameBoard: HTMLElement, diceResult: number, turn: PlayerColor, handleSwitchTurn: () => void, handleColorWin: (color: PlayerColor) => void) {
     const playerColor = playerColors[turn]
     if (!isPieceOut(turn)) {
         if (diceResult === 6)
@@ -107,14 +107,14 @@ export function moveForwardPieceBot(gameBoard: HTMLElement, diceResult: number, 
         if (pieceOut.length < 4) {
             if (diceResult !== 6) {
                 if (startingCellContainChild(playerColors, gameBoard, turn)) {
-                    forwardPiece(playerColor, pieceOut, diceResult, gameBoard, handleSwitchTurn, turn)
+                    forwardPiece(playerColor, pieceOut, diceResult, gameBoard, handleSwitchTurn, turn, handleColorWin)
                 }
                 else {
                     if (eatPiece(playerColor, pieceOut, diceResult, gameBoard, handleSwitchTurn, turn)) {
                         handleSwitchTurn()
                         return
                     }
-                    forwardPiece(playerColor, pieceOut, diceResult, gameBoard, handleSwitchTurn, turn)
+                    forwardPiece(playerColor, pieceOut, diceResult, gameBoard, handleSwitchTurn, turn, handleColorWin)
                 }
                 return
             } else {
@@ -125,7 +125,7 @@ export function moveForwardPieceBot(gameBoard: HTMLElement, diceResult: number, 
                     if (eatPiece(playerColor, pieceOut, diceResult, gameBoard, handleSwitchTurn, turn)) {
                         return
                     }
-                    forwardPiece(playerColor, pieceOut, diceResult, gameBoard, handleSwitchTurn, turn)
+                    forwardPiece(playerColor, pieceOut, diceResult, gameBoard, handleSwitchTurn, turn, handleColorWin)
                 }
                 return
             }
@@ -136,7 +136,7 @@ export function moveForwardPieceBot(gameBoard: HTMLElement, diceResult: number, 
                 handleSwitchTurn()
                 return
             }
-            forwardPiece(playerColor, pieceOut, diceResult, gameBoard, handleSwitchTurn, turn)
+            forwardPiece(playerColor, pieceOut, diceResult, gameBoard, handleSwitchTurn, turn, handleColorWin)
         }
     }
 }

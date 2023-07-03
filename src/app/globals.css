@@ -227,8 +227,30 @@ header mark {
     background-color: #fff;
 }
 
+.win {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.win div {
+    display: flex;
+    align-items: center;
+}
+
+.win div p {
+    color: black;
+    font-weight: bold;
+    font-size: 30px;
+}
+
 .piece {
     cursor: pointer;
+}
+
+.piece:hover {
+    transform: scale(1.2);
 }
 
 .pieceGame {
@@ -416,6 +438,13 @@ header mark {
         flex-direction: column;
     }
 }
+
+@media only screen and (max-width: 500px) {
+    .win div p {
+        font-size: 16px;
+    }
+}
+
 
 @keyframes roll {
     0% {
