@@ -52,14 +52,14 @@ export function Dice({onDiceRoll, canRoll, handleError, botRollDice, mainColor, 
                     if (count === 3) {
                         setTimeout(() => {
                             onDiceRoll(randomNumber)
-                        }, 2000)
+                        }, 1300)
                     } else
                         onDiceRoll(randomNumber)
                 }
                 else if (switchPlayer(gameBoard, playerColor as PlayerColor, randomNumber) || randomNumber !== 6) {
                     setTimeout(() => {
                         onDiceRoll(randomNumber)
-                    }, 2000)
+                    }, 1300)
                 } else {
                     onDiceRoll(randomNumber)
                 }

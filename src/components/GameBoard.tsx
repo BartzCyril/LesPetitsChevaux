@@ -39,9 +39,9 @@ export function GameBoard({colorPlayer, colorStart, handleColorWin}: GameBoardPr
     const {pushToast} = useToasts();
 
     const displayToast = useCallback((title: string, message : string, duration : number, type : "success" | "danger" | "default") => {
-        pushToast({title: title, content : message, duration : 3, type : type})
+        pushToast({title: title, content : message, duration : 1.8, type : type})
         return setInterval(() => {
-            pushToast({title: title, content : message, duration : 3, type : type})
+            pushToast({title: title, content : message, duration : 1.8, type : type})
         }, duration * 1000)
     }, [pushToast])
     const handleDiceRoll = (value: number) => {

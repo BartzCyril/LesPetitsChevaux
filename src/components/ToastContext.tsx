@@ -13,12 +13,9 @@ import { Toast } from "./Toast";
 import { AnimatePresence, motion } from "framer-motion";
 
 type Params = ComponentProps<typeof Toast> & { duration?: number };
-type ToastItem = {
+type ToastItem = ComponentProps<typeof Toast> & {
     id: number;
     timer: ReturnType<typeof setTimeout>;
-    title?: string;
-    type?: "success" | "danger" | "default";
-    content: string;
 };
 
 const defaultPush = (toast: Params) => {};
@@ -52,35 +49,35 @@ export function useToasts() {
 }
 
 export function Toasts() {
-    const [toasts, setToasts] = useState(null as ToastItem | null);
+    const [toasts, setToasts] = useState([] as ToastItem[]);
     const { pushToastRef } = useContext(ToastContext);
     pushToastRef.current = ({ duration, ...props }: Params) => {
         const id = Date.now();
         const timer = setTimeout(() => {
-            setToasts(null);
+            setToasts((v) => v.filter((t) => t.id !== id));
         }, (duration ?? 5) * 1000);
         const toast = { ...props, id, timer };
-        setToasts(toast as ToastItem)
+        setToasts((v) => [...v, toast as ToastItem]);
     };
 
     const onRemove = (toast: ToastItem) => {
         clearTimeout(toast.timer);
-        setToasts(null);
+        setToasts((v) => v.filter((t) => t !== toast));
     };
     return (
         <div className="toast-container">
             <AnimatePresence>
-                {toasts && (
+                {toasts.map((toast) => (
                     <motion.div
-                        onClick={() => onRemove(toasts)}
-                        key={toasts.id}
+                        onClick={() => onRemove(toast)}
+                        key={toast.id}
                         initial={{ opacity: 0, x: -30 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 30 }}
                     >
-                        <Toast {...toasts} />
+                        <Toast {...toast} />
                     </motion.div>
-                )}
+                ))}
             </AnimatePresence>
         </div>
     );
