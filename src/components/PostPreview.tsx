@@ -4,15 +4,15 @@ import Image from "next/image";
 
 const PostPreview = (props: PostMetadata) => {
     return (
-        <article className="p-6 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+        <article className="p-6 bg-white rounded-lg border border-gray-200 shadow-md">
             <Link href={`/posts/${props.slug}`}>
-                <h2 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{props.title}</h2>
+                <h2 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">{props.title}</h2>
             </Link>
-            <p className="mb-5 font-light text-gray-500 dark:text-gray-400">{props.subtitle}</p>
+            <p className="mb-5 font-light text-gray-500">{props.subtitle}</p>
             <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-4">
                     <Image width={0} height={0} src="./img/me.jpg" alt="Image de cyril bartz" className="w-7 h-7 rounded-full"/>
-                    <span className="font-medium dark:text-white">
+                    <span className="font-medium">
                           Cyril BARTZ
                       </span>
                 </div>
