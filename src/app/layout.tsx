@@ -10,8 +10,8 @@ export default function RootLayout({
     const header = (
         <header>
             <Link href="https://www.gameludo.app/">
-            <h1 className="mb-4 text-3xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl dark:text-white">Jouez au <mark
-                className="px-2 text-white rounded dark:bg-blue-500">Ludo</mark> c&apos;est gratuit !
+            <h1 className="mb-4 text-3xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl">Jouez au <mark
+                className="px-2 text-white rounded">Ludo</mark> c&apos;est gratuit !
             </h1>
             </Link>
         </header>
