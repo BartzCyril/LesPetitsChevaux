@@ -64,6 +64,16 @@ export function checkIfPlayerClickedOnIncorrectPiece(playerColors: PlayerColors,
         }
     }
     if (numberPieceOutColor >= 1 && numberPieceOutColor < 4) {
+        if (!isPieceOut)
+            return false
+        else {
+            if (numberPieceOutColor >= 1 && diceResult === 6 && !startingCellContainChild(playerColors,gameBoard, turn)) {
+                if (handleError) {
+                    handleError(ErrorMessage.RELEASE_PIECE_FIRST)
+                }
+                return true
+            }
+        }
         const playerColor = playerColors[turn]
         const nextIndexPath = playerColor.pathPiece[diceResult];
         if (checkIfClickedChildMatchesStartingCell(playerColors,gameBoard, turn, pieceIndex))
@@ -82,16 +92,6 @@ export function checkIfPlayerClickedOnIncorrectPiece(playerColors: PlayerColors,
                 handleError(ErrorMessage.CLEAR_START_CELL_FIRST)
             }
             return true
-        }
-        if (!isPieceOut)
-            return false
-        else {
-            if (numberPieceOutColor >= 1 && diceResult === 6) {
-                if (handleError) {
-                    handleError(ErrorMessage.RELEASE_PIECE_FIRST)
-                }
-                return true
-            }
         }
     }
     return false
