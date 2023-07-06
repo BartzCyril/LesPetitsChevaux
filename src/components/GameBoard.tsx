@@ -79,7 +79,6 @@ export function GameBoard({colorPlayer, colorStart, handleColorWin}: GameBoardPr
             }
             if (!isPieceOut(turn) && value === 6 && turn === colorPlayer)
                 setCanRollDice(false)
-            console.log(switchPlayer(gameBoardRef.current as HTMLElement, turn, value))
             if (gameBoardRef.current && switchPlayer(gameBoardRef.current as HTMLElement, turn, value)) {
                 handleSwitchTurn()
                 setDiceValue(-1)
