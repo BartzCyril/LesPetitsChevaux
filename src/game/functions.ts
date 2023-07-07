@@ -116,6 +116,26 @@ export function switchPlayer(gameBoard: HTMLElement, turn: PlayerColor, diceValu
     }
 }
 
+export function canRetryRollDice(gameBoard: HTMLElement, turn: PlayerColor, diceValue: number) {
+    const piecesOut = getPieceOut(turn)
+    console.log(piecesOut)
+    const playerColor = playerColors[turn]
+    let k = 0
+    for (let i=0 ; i < piecesOut.length; i++) {
+        if (piecesOut[i].indexPath === -1 || piecesOut[i].indexPath === 0) {
+            return false
+        }
+        if (isConflictBetweenSameColor(turn, gameBoard, playerColor.pathPiece[piecesOut[i].indexPath + diceValue]) ||  !playerColor.pathPiece[piecesOut[i].indexPath + diceValue]) {
+            console.log(playerColor.pathPiece[piecesOut[i].indexPath + diceValue])
+            console.log(isConflictBetweenSameColor(turn, gameBoard, playerColor.pathPiece[piecesOut[i].indexPath + diceValue]))
+            console.log(!playerColor.pathPiece[piecesOut[i].indexPath + diceValue])
+            k++
+        }
+    }
+    console.log(k)
+    return k === piecesOut.length
+}
+
 export function updateGameBoard(gameBoard: HTMLElement, pieceIndex: Index, nextIndex: Index, turn: PlayerColor) {
     const piece = gameBoard.querySelector(`#piece-${turn}-${pieceIndex}`)
     const nextPosition = gameBoard.querySelector(`#cell-${nextIndex}`)

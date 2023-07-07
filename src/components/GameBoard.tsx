@@ -6,6 +6,7 @@ import {useCallback, useEffect, useRef, useState} from "react";
 import {PlayerColor} from "@/type/PlayerColor";
 import {ErrorMessage} from "@/type/ErrorMessage";
 import {
+    canRetryRollDice,
     isPieceOut,
     moveForwardPiece,
     playerColors,
@@ -83,8 +84,12 @@ export function GameBoard({colorPlayer, colorStart, handleColorWin}: GameBoardPr
                 handleSwitchTurn()
                 setDiceValue(-1)
             } else {
-                if (turn === colorPlayer)
-                    setCanRollDice(false)
+                if (turn === colorPlayer) {
+                    if (value === 6 && canRetryRollDice(gameBoardRef.current as HTMLElement, turn, diceValue) && isPieceOut(turn))
+                        setCanRollDice(true)
+                    else
+                        setCanRollDice(false)
+                }
             }
         }
     }
