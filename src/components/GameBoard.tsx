@@ -85,7 +85,7 @@ export function GameBoard({colorPlayer, colorStart, handleColorWin}: GameBoardPr
                 setDiceValue(-1)
             } else {
                 if (turn === colorPlayer) {
-                    if (value === 6 && canRetryRollDice(gameBoardRef.current as unknown as HTMLElement, turn, diceValue) && isPieceOut(turn))
+                    if (value === 6 && canRetryRollDice(gameBoardRef.current as unknown as HTMLElement, turn, value) && isPieceOut(turn))
                         setCanRollDice(true)
                     else
                         setCanRollDice(false)
