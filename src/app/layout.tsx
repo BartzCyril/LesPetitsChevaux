@@ -31,6 +31,9 @@ export default function RootLayout({
         <meta content="width=device-width, initial-scale=1" name="viewport"/>
         <meta name="description" content="Plongez dans l'univers du jeu des petits chevaux, un classique indémodable ! Notre site offre une expérience captivante de ce jeu de société populaire en version solo contre des bots intelligents. Lancez les dés, déplacez vos pions et stratégisez pour remplir votre écurie le plus rapidement possible. Profitez de graphismes attrayants, de règles fidèles au jeu original et d'une jouabilité immersive. Rejoignez-nous dès maintenant pour vivre des moments de divertissement en solo avec le jeu des petits chevaux."/>
         <link rel="icon" href="./img/horse.svg"/>
+        <script async
+                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4145165029182891"
+                crossOrigin="anonymous"></script>
         <body>
         <div className="div-main">
             {header}
