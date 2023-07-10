@@ -1,5 +1,5 @@
 ---
-title: Histoire du jeu
+title: Histoire du jeu des petits chevaux
 subtitle: "Le jeu des Petits Chevaux est un jeu de société populaire qui trouve ses origines dans l'ancienne Inde..."
 ---
 

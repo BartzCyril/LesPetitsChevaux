@@ -1,7 +1,7 @@
 import {CSSProperties} from "react";
 
 type Button = {
-    handleStart: () => void,
+    handleStart?: () => void,
     buttonText: string;
     style: {
         div: CSSProperties,

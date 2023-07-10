@@ -2,6 +2,8 @@ import fs from "fs";
 import Markdown from "markdown-to-jsx";
 import matter from "gray-matter";
 import getPostMetadata from "../../../components/getPostMetadata";
+import {Button} from "@/components/Button";
+import Link from "next/link";
 
 const getPostContent = (slug: string) => {
     const folder = "posts/";
@@ -21,6 +23,20 @@ export const generateStaticParams = async () => {
 const PostPage = (props: any) => {
     const slug = props.params.slug;
     const post = getPostContent(slug);
+    const style = {
+        div: {
+            display: 'flex',
+            justifyContent: 'center',
+            margin: '25px 0'
+        },
+        button: {
+            backgroundColor: '#5151e6',
+            padding: '10px',
+            color: 'white',
+            fontWeight: 'bold',
+            borderRadius: '10px',
+        }
+    }
     return (
         <div>
             <div className="text-center">
@@ -30,6 +46,11 @@ const PostPage = (props: any) => {
             <article className="prose">
                 <Markdown>{post.content}</Markdown>
             </article>
+
+            <Link href="https://www.gameludo.app/">
+                <Button buttonText={"Jouer au jeu des petits chevaux"} style={style}/>
+            </Link>
+
         </div>
     );
 };

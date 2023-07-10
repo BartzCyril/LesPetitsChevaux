@@ -33,6 +33,13 @@ ul {
     color: #6B7280;
 }
 
+.prose img {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 0.75rem;
+    background-color: #F9FAFB;
+}
+
 .prose ul {
     color: #6B7280;
     max-width: 768px;
