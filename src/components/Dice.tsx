@@ -3,7 +3,7 @@
 import {useCallback, useEffect, useRef} from "react";
 import {ErrorMessage} from "@/type/ErrorMessage";
 import {PlayerColor} from "@/type/PlayerColor";
-import {playerColors, switchPlayer} from "@/game/functions";
+import {switchPlayer} from "@/game/functions";
 
 type DiceProps = {
     onDiceRoll: (value: number) => void

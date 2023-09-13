@@ -97,10 +97,12 @@ export function switchPlayer(gameBoard: HTMLElement, turn: PlayerColor, diceValu
         const piecesOut = getPieceOut(turn)
         let count = 0
         for (const piece of piecesOut) {
-            if (!playerColors[turn].pathPiece[piece.indexPath + diceValue])
+            if (!playerColors[turn].pathPiece[piece.indexPath + diceValue]) {
                 count++
-            else if (isConflictBetweenSameColor(turn, gameBoard, piece.indexPath + diceValue))
+            }
+            else if (isConflictBetweenSameColor(turn, gameBoard, playerColors[turn].pathPiece[piece.indexPath + diceValue])) {
                 count++
+            }
             else {
                 let pieceIndex: number = 0
                 for (let i = 0; i < playerColors[turn].pieces.length; i++) {
@@ -108,8 +110,9 @@ export function switchPlayer(gameBoard: HTMLElement, turn: PlayerColor, diceValu
                         break
                     pieceIndex++
                 }
-                if (!home(gameBoard, playerColors, turn, pieceIndex, diceValue))
+                if (!home(gameBoard, playerColors, turn, pieceIndex, diceValue)) {
                     count++
+                }
             }
         }
         return count === piecesOut.length
